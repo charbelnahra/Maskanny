@@ -15,7 +15,7 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: 'Maskanny - Student Housing',
+  title: 'Maskanny',
   description: 'Student housing search and management platform',
   icons: {
     icon: '/Maskanny.svg',
