@@ -1,6 +1,7 @@
-import type { Metadata } from 'next';
-import { Inter, Plus_Jakarta_Sans } from 'next/font/google';
-import './globals.css';
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
+import "./app.css";
 
 const inter = Inter({
   subsets: ['latin'],
