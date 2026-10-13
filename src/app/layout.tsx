@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import "./app.css";
+import type { Metadata } from 'next';
+import { Inter, Plus_Jakarta_Sans } from 'next/font/google';
+import './globals.css';
+import StudentNav from "../../student_side/StudentNav";
+import { Toaster } from 'sonner';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -31,7 +32,15 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${plusJakartaSans.variable}`}>
       <body className="font-sans antialiased bg-brand-light text-brand-navy">
+        <StudentNav />
         {children}
+        <Toaster
+          position="bottom-center"
+          richColors
+          closeButton
+          visibleToasts={3}
+          toastOptions={{ style: { borderRadius: "16px", fontFamily: "inherit" } }}
+        />
       </body>
     </html>
   );
