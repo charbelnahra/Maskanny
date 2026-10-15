@@ -1,7 +1,6 @@
 import PropertyForm from "../../../features/properties/presentation/components/PropertyForm";
 import { redirect } from "next/navigation";
 import { createCookieClient } from "@/src/lib/supabase/cookie-client";
-import { AuthenticatedHeader } from "@/src/components/auth/AuthenticatedHeader";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = { title: "Create a property | Maskanny" };
@@ -26,10 +25,6 @@ export default async function CreatePropertyPage() {
   return (
     <main className="create-listing-page">
       <div className="create-listing-container mx-auto w-full max-w-[1040px]">
-        <div className="mb-10 sm:mb-12">
-          <AuthenticatedHeader email={user.email} />
-        </div>
-
         <header className="create-listing-header">
           <span className="create-listing-eyebrow">PROPERTY LISTING</span>
 

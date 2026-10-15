@@ -11,7 +11,7 @@ import { supabase } from "@/src/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { Check, ImagePlus, Trash2 } from "lucide-react";
-import PropertySelect, { type PropertySelectOption } from "./PropertySelect";
+import PropertyCreateSelect, { type PropertySelectOption } from "./PropertySelect";
 import PropertyLocationPicker from "./PropertyLocationPicker";
 import PropertyUniversitySelect from "./PropertyUniversitySelect";
 import type { University } from "@/src/features/universities/models/university.model";
@@ -23,7 +23,6 @@ import {
   PROPERTY_IMAGE_TYPES as IMAGE_TYPES,
 } from "../../validation/media-limits";
 
-import { PropertySelect, PROPERTY_INPUT_CLASSES as INPUT_CLASSES } from "./PropertySelect";
 
 type PropertyFormPayload = Omit<PropertyCreate, "host_id">;
 
@@ -297,16 +296,16 @@ function FormField({
       </label>
 
       {options ? (
-        <PropertySelect
+        <PropertyCreateSelect
           id={id}
           label={label}
           value={value}
-          options={options}
           placeholder={placeholder}
-          disabled={disabled}
+          options={options}
           invalid={Boolean(errors[id])}
           describedBy={describedBy}
           onValueChange={(value) => onChange(id, value)}
+          disabled={disabled}
         />
       ) : multiline ? (
         <textarea

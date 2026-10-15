@@ -6,13 +6,14 @@ import {
   MapContainer,
   Marker,
   TileLayer,
+  ZoomControl,
   useMap,
   useMapEvents,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import type { Coordinates } from "./property-location";
+export type { Coordinates } from "./property-location";
 import "./property-map.css";
-
-export type Coordinates = { latitude: number; longitude: number };
 
 const markerIcon = divIcon({
   className: "property-location-marker",
@@ -85,25 +86,47 @@ function MapSelection({
   ) : null;
 }
 
-export default function PropertyMap({
-  position,
-  disabled,
-  onSelect,
-}: {
-  position: Coordinates | null;
-  disabled: boolean;
-  onSelect: (point: Coordinates) => void;
-}) {
+function MapPreview({ position, interactive }: { position: Coordinates; interactive: boolean }) {
+  const map = useMap();
+  useEffect(() => {
+    map.setView([position.latitude, position.longitude], 15, { animate: false });
+  }, [map, position.latitude, position.longitude]);
+  useEffect(() => {
+    const container = map.getContainer();
+    container.setAttribute("role", "region");
+    container.setAttribute("aria-label", "Property location map");
+    container.setAttribute("aria-describedby", "property-map-help");
+    container.style.touchAction = interactive ? "none" : "pan-y";
+    for (const handler of [map.dragging, map.touchZoom, map.doubleClickZoom, map.keyboard, map.boxZoom]) {
+      if (interactive) handler.enable(); else handler.disable();
+    }
+  }, [map, interactive]);
+  return <Marker position={[position.latitude, position.longitude]} icon={markerIcon}
+    title="Saved property location" alt="Saved property location" keyboard={false} interactive={false} />;
+}
+
+type PropertyMapProps =
+  | { position: Coordinates | null; disabled: boolean; onSelect: (point: Coordinates) => void; readOnly?: false }
+  | { position: Coordinates; readOnly: true; interactive: boolean };
+
+export default function PropertyMap(props: PropertyMapProps) {
+  const { position } = props;
+  const interactive = !props.readOnly || props.interactive;
   const [tileError, setTileError] = useState(false);
   return (
     <div>
       <MapContainer
         // Initial viewport only. Never used as the submitted property location.
-        center={[33.8938, 35.5018]}
-        zoom={12}
+        center={position ? [position.latitude, position.longitude] : [33.8938, 35.5018]}
+        zoom={position ? 15 : 12}
         minZoom={2}
         maxZoom={19}
         scrollWheelZoom={false}
+        zoomControl={false}
+        dragging={interactive}
+        touchZoom={interactive}
+        doubleClickZoom={interactive}
+        keyboard={interactive}
         className="property-location-map"
       >
         <TileLayer
@@ -111,16 +134,14 @@ export default function PropertyMap({
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           eventHandlers={{ tileerror: () => setTileError(true) }}
         />
-        <MapSelection
-          position={position}
-          disabled={disabled}
-          onSelect={onSelect}
-        />
+        {interactive && <ZoomControl position="topleft" />}
+        {props.readOnly ? <MapPreview position={props.position} interactive={props.interactive} /> :
+          <MapSelection position={position} disabled={props.disabled} onSelect={props.onSelect} />}
       </MapContainer>
       {tileError && (
         <p role="status" className="mt-2 text-sm text-(--danger)">
-          Map tiles could not load. Check your connection; you can still use
-          your current location.
+          {props.readOnly ? "Map tiles could not load. You can still open directions to the saved location." :
+            "Map tiles could not load. Check your connection; you can still use your current location."}
         </p>
       )}
     </div>
