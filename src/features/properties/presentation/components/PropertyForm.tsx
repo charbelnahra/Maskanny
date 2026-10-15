@@ -23,6 +23,8 @@ import {
   PROPERTY_IMAGE_TYPES as IMAGE_TYPES,
 } from "../../validation/media-limits";
 
+import { PropertySelect, PROPERTY_INPUT_CLASSES as INPUT_CLASSES } from "./PropertySelect";
+
 type PropertyFormPayload = Omit<PropertyCreate, "host_id">;
 
 type SelectedLocation = Pick<Property, "address" | "latitude" | "longitude">;
