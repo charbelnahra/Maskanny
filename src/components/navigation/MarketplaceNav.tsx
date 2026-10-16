@@ -25,7 +25,7 @@ export function MarketplaceNav() {
     pathname.startsWith("/admin/") ||
     pathname === "/owner" ||
     pathname.startsWith("/owner/");
-  if (dashboard) return <MinimalMarketplaceNav dashboard />;
+  if (dashboard) return null;
   return pathname === "/host/onboarding" ? (
     <MinimalMarketplaceNav />
   ) : (

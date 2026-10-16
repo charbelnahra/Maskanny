@@ -34,7 +34,7 @@ export default function RecentSubmissions({ submissions, total = submissions.len
   return <div className="bg-white rounded-2xl border border-brand-slate/15 shadow-sm overflow-hidden flex-1 w-full min-w-0">
     <div className="p-4 sm:p-5 border-b border-brand-slate/10 flex items-center justify-between">
       <div><h3 className="font-bold text-brand-navy text-sm sm:text-base">Property Submissions</h3><p className="text-xs text-brand-slate">Showing {submissions.length} of {total.toLocaleString()} entries</p></div>
-      {onViewAll && <button type="button" onClick={onViewAll} className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-brand-light">View All</button>}
+      {onViewAll && <button type="button" onClick={onViewAll} className="!text-sm font-semibold px-3 py-1.5 rounded-lg bg-brand-light hover:bg-brand-navy hover:text-white transition-colors duration-200 cursor-pointer">View All</button>}
     </div>
     {message && <p role="status" className="p-3 text-sm text-emerald-700">{message}</p>}
     <div className="w-full overflow-x-auto"><table className="w-full text-left text-xs sm:text-sm text-brand-navy border-collapse">

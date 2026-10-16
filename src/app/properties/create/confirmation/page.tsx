@@ -1,43 +1,96 @@
+
 import Link from "next/link";
 import type { Metadata } from "next";
-import { Check } from "lucide-react";
+import { Check, Clock3, ShieldCheck } from "lucide-react";
 
-export const metadata: Metadata = { title: "Property submitted | Maskanny" };
+export const metadata: Metadata = {
+  title: "Property submitted | Maskanny",
+};
 
 export default function PropertyConfirmationPage() {
   return (
-    <main className="create-listing-page flex min-h-screen items-center justify-center px-5">
+    <main className="flex min-h-screen items-center justify-center bg-[#F8F9FB] px-5 py-12">
       <section
         aria-labelledby="confirmation-title"
-        className="w-full max-w-[640px] rounded-(--radius-xl) border border-(--line) bg-(--surface) px-[44px] py-[48px] text-center max-[480px]:px-[24px] max-[480px]:py-[32px]"
+        className="relative w-full max-w-[600px] overflow-hidden rounded-2xl border border-[#385F71]/15 bg-white px-8 py-10 text-center shadow-[0_20px_60px_-35px_rgba(43,65,98,0.22)] sm:px-12 sm:py-12"
       >
-        <span className="create-listing-eyebrow">MASKANNY HOSTING</span>
+        {/* Brand accent */}
         <div
           aria-hidden="true"
-          className="mx-auto mb-6 grid size-16 place-items-center rounded-(--radius-full) bg-(--success) text-white ring-8 ring-(--success-bg)"
+          className="absolute top-0 left-0 h-1 w-full bg-[#D7B377]"
+        />
+
+        <p className="mb-8 text-[11px] font-bold uppercase tracking-[0.2em] text-[#8F754F]">
+          Maskanny · Hosting
+        </p>
+
+        {/* Success icon */}
+        <div
+          aria-hidden="true"
+          className="mx-auto mb-7 grid size-[68px] place-items-center rounded-full border border-[#D7B377]/50 bg-[#E9EEF2] text-[#2B4162]"
         >
-          <Check size={28} strokeWidth={2.25} />
+          <Check size={30} strokeWidth={2.4} />
         </div>
+
         <h1
           id="confirmation-title"
-          className="mx-auto max-w-[460px] text-[34px] font-medium leading-[1.15] tracking-[-0.025em] max-[480px]:text-[28px]"
+          className="mx-auto max-w-[440px] text-[28px] leading-[1.2] font-semibold tracking-[-0.035em] text-[#2B4162] sm:text-[34px]"
         >
-          Property submitted successfully!
+          Your property is submitted!
         </h1>
-        <p className="mt-5 text-[15px] leading-7 text-(--soft)">
-          Your property has been submitted for review. Our team typically
-          reviews listings within 12–24 hours.
+
+        <p className="mx-auto mt-4 max-w-[440px] text-[14px] leading-7 text-[#6F7F8D] sm:text-[15px]">
+          Thank you for choosing Maskanny. Your listing has been received and
+          is now waiting for our team to review it.
         </p>
-        <p className="mt-6 rounded-(--radius-sm) border border-(--success)/20 bg-(--success-bg) px-4 py-3 text-[13px] leading-6 text-(--success)">
-          Your listing is published only after Admin approval and an active,
-          paid boost.
-        </p>
+
+        {/* Review information */}
+        <div className="mt-8 flex items-start gap-4 rounded-xl border border-[#385F71]/10 bg-[#F8F9FB] p-5 text-left">
+          <div className="grid size-10 shrink-0 place-items-center rounded-full border border-[#D7B377]/35 bg-white text-[#385F71]">
+            <Clock3 size={19} />
+          </div>
+
+          <div>
+            <h2 className="text-[14px] font-semibold text-[#2B4162]">
+              What happens next?
+            </h2>
+            <p className="mt-1 text-[13px] leading-6 text-[#6F7F8D]">
+              Our team typically reviews listings within 12–24 hours. You can
+              check back after your listing has been reviewed.
+            </p>
+          </div>
+        </div>
+
+        {/* Publication requirements */}
+        <div className="mt-4 flex items-start gap-3 rounded-xl border border-[#D7B377]/35 bg-[#FBF8F1] p-4 text-left">
+          <ShieldCheck
+            size={19}
+            className="mt-0.5 shrink-0 text-[#8F754F]"
+            aria-hidden="true"
+          />
+
+          <p className="text-[12px] leading-6 text-[#6F7F8D]">
+            <span className="font-semibold text-[#2B4162]">
+              Before publication:
+            </span>{" "}
+            Your listing must receive Admin approval and have an active, paid
+            boosting plan.
+          </p>
+        </div>
+
         <Link
           href="/"
-          className="mt-8 inline-flex min-h-[52px] items-center justify-center rounded-(--radius-full) bg-(--ink) px-7 py-3 text-sm font-medium text-white! hover:bg-(--btn-bg-hover) focus-visible:outline-2 focus-visible:outline-(--ink) focus-visible:outline-offset-[4px] max-[480px]:w-full"
+          className="mt-8 inline-flex min-h-[50px] w-full items-center justify-center rounded-full border border-[#D7B377]/50 bg-[#2B4162] px-7 py-3 text-[14px] font-semibold text-white transition-colors duration-200 hover:border-[#D7B377] hover:bg-[#385F71] focus-visible:outline-2 focus-visible:outline-[#D7B377] focus-visible:outline-offset-4 sm:w-auto sm:min-w-[200px]"
         >
           Go to Home Page
+          <span aria-hidden="true" className="ml-2 text-[#D7B377]">
+            →
+          </span>
         </Link>
+
+        <p className="mt-7 text-[12px] text-[#8A98A6]">
+          Student housing, made simpler.
+        </p>
       </section>
     </main>
   );

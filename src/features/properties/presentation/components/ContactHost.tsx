@@ -71,7 +71,8 @@ export function ContactHost({ propertyId }: { propertyId: string }) {
 
   return <>
     <button ref={trigger} type="button" className={styles.trigger} aria-haspopup="dialog" onClick={reveal}>
-      <MessageCircle size={18} aria-hidden="true" />Contact host
+      <MessageCircle size={18} aria-hidden="true" />
+      Contact host
     </button>
     <dialog ref={dialog} className={styles.dialog} aria-labelledby={titleId} aria-describedby={descriptionId} onKeyDown={(event) => {
       if (event.key !== "Tab") return;

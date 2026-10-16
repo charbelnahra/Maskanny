@@ -17,8 +17,7 @@ import {
 import { useLogout } from "@/src/lib/supabase/use-logout";
 import type { MarketplaceAccount } from "./useMarketplaceAccount";
 
-const focusClass =
-  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--marketplace-focus,var(--success))]";
+const focusClass = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D7B377]";
 const itemLayout = `flex min-h-11 w-full items-center gap-3 rounded-[10px] px-3 py-2.5 text-left text-sm font-medium transition-colors motion-reduce:transition-none ${focusClass}`;
 const itemClass = `${itemLayout} text-[var(--ink-2)] hover:bg-[var(--chip)] focus-visible:bg-[var(--chip)]`;
 type AuthenticatedAccount = Extract<
@@ -208,7 +207,7 @@ export function AccountMenu({
           tabIndex={-1}
           href="/sign-in"
           onClick={onSelect}
-          className={`flex min-h-11 items-center justify-center gap-2 rounded-[10px] bg-[var(--success)] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#314b35] motion-reduce:transition-none ${focusClass}`}
+          className={`flex min-h-11 items-center justify-center gap-2 rounded-[10px] bg-[#2B4162] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#385F71] motion-reduce:transition-none ${focusClass}`}
         >
           <LogIn size={17} aria-hidden="true" />
           Log in
@@ -370,7 +369,7 @@ export function AccountDropdown({
         aria-busy={account.status === "loading"}
         tabIndex={-1}
         onKeyDown={handleMenuKey}
-        className="absolute top-[calc(100%+12px)] right-0 z-50 max-h-[calc(100dvh-84px)] w-[280px] max-w-[calc(100vw-32px)] overflow-y-auto rounded-2xl border border-[var(--line-strong)] bg-[var(--surface)] p-2 text-[var(--ink)] shadow-[0_12px_36px_-12px_rgba(22,23,26,0.24)] outline-none [--marketplace-focus:var(--success)] max-md:fixed max-md:top-[68px] max-md:right-4"
+        className="absolute top-[calc(100%+12px)] right-0 z-50 max-h-[calc(100dvh-84px)] w-[280px] max-w-[calc(100vw-32px)] overflow-y-auto rounded-2xl border border-[var(--line-strong)] bg-[var(--surface)] p-2 text-[var(--ink)] shadow-[0_12px_36px_-12px_rgba(22,23,26,0.24)] outline-none [--marketplace-focus:#D7B377] max-md:fixed max-md:top-[68px] max-md:right-4"
       >
         <AccountMenu
           account={account}

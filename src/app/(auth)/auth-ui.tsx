@@ -41,17 +41,55 @@ export function AuthPhoneField({ value, onChange, error }: { value: string; onCh
   );
 }
 
-export function AuthButton({ loading, disabled = false, children }: { loading: boolean; disabled?: boolean; children: React.ReactNode }) {
-  const hydrated = useSyncExternalStore(subscribeToHydration, () => true, () => false);
+
+export function AuthButton({
+  loading,
+  disabled = false,
+  children,
+}: {
+  loading: boolean;
+  disabled?: boolean;
+  children: React.ReactNode;
+}) {
+  const hydrated = useSyncExternalStore(
+    subscribeToHydration,
+    () => true,
+    () => false
+  );
+
   return (
-    <button type="submit" disabled={loading || disabled || !hydrated} className="flex h-12 w-full items-center justify-center gap-2 rounded-[var(--radius-sm)] bg-[var(--btn-bg)] px-5 text-sm font-semibold text-[var(--btn-ink)] transition-colors enabled:hover:bg-[var(--btn-bg-hover)] focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-60">
-      {loading && <LoaderCircle size={18} className="animate-spin" aria-hidden="true" />}{children}
+    <button
+      type="submit"
+      disabled={loading || disabled || !hydrated}
+      className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#2B4162] px-5 text-sm font-semibold text-white shadow-sm transition-all duration-200 enabled:hover:bg-[#385F71] enabled:hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[#D7B377] disabled:cursor-not-allowed disabled:opacity-60"
+    >
+      {loading && (
+        <LoaderCircle
+          size={18}
+          className="animate-spin"
+          aria-hidden="true"
+        />
+      )}
+      {children}
     </button>
   );
 }
 
-export function AuthActionLink({ href, children }: { href: string; children: React.ReactNode }) {
-  return <Link href={href} className="flex min-h-12 w-full items-center justify-center rounded-[var(--radius-sm)] bg-[var(--btn-bg)] px-5 text-center text-sm font-semibold text-[var(--btn-ink)]! transition-colors hover:bg-[var(--btn-bg-hover)] focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[var(--ink)]">{children}</Link>;
+export function AuthActionLink({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      className="flex min-h-12 w-full items-center justify-center rounded-xl bg-[#2B4162] px-5 text-center text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#385F71] hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[#D7B377]"
+    >
+      {children}
+    </Link>
+  );
 }
 
 export function AuthNotice({ message, success = false }: { message: string | null; success?: boolean }) {

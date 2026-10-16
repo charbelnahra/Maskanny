@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import {
   LayoutDashboard,
   Building2,
@@ -48,19 +49,25 @@ export function DashboardSidebar({
     <aside className="w-full md:w-64 bg-white border-b md:border-b-0 md:border-r border-brand-slate/15 flex flex-col justify-between shrink-0 self-stretch">
       <div className="p-4 md:p-6 space-y-4 md:space-y-8">
         <div className="flex items-center gap-3">
-          <div className="relative w-8 h-8 rounded-xl flex items-center justify-center text-white shrink-0 overflow-hidden p-1.5">
-            <Image
-              src="/Maskanny.svg"
-              alt="Maskanny Logo"
-              fill
-              className="object-contain p-1"
-            />
-          </div>
-          <div className="flex flex-col">
-            <span className="font-bold text-brand-navy text-lg tracking-tight">
+          <Link
+            href="/"
+            aria-label="Go to homepage"
+            className="relative z-10 flex w-fit cursor-pointer items-center gap-3"
+          >
+            <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-xl">
+              <Image
+                src="/Maskanny.svg"
+                alt="Maskanny Logo"
+                fill
+                className="object-contain p-1"
+                priority
+              />
+            </div>
+
+            <span className="text-lg font-bold tracking-tight text-brand-navy">
               Maskanny
             </span>
-          </div>
+          </Link>
         </div>
 
         <nav aria-label="Admin sections" className="grid grid-cols-2 sm:grid-cols-3 md:block gap-1.5 md:space-y-1.5">
@@ -74,11 +81,10 @@ export function DashboardSidebar({
                 type="button"
                 aria-current={isActive ? "page" : undefined}
                 onClick={() => setActiveTab(item.id)}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
-                  isActive
-                    ? "bg-brand-navy text-white shadow-sm"
-                    : "text-brand-slate hover:bg-brand-light hover:text-brand-navy"
-                }`}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all cursor-pointer ${isActive
+                  ? "bg-brand-navy text-white shadow-sm"
+                  : "text-brand-slate hover:bg-brand-light hover:text-brand-navy"
+                  }`}
               >
                 <Icon
                   className={`w-4 h-4 ${isActive ? "text-brand-gold" : "text-brand-slate"}`}

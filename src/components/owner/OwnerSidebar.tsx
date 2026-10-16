@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useLogout } from '@/src/lib/supabase/use-logout';
 import {
   LayoutDashboard,
@@ -30,7 +31,6 @@ export function OwnerSidebar({
   const navItems = [
     { id: 'Dashboard', label: 'Overview', icon: LayoutDashboard },
     { id: 'My Listings', label: 'My Listings', icon: Building2 },
-    { id: 'Add Listing', label: 'Add Listing', icon: HousePlus },
     { id: 'Review', label: 'Reviews', icon: Star },
     { id: 'Settings', label: 'Settings', icon: Settings },
   ];
@@ -48,21 +48,24 @@ export function OwnerSidebar({
   return (
     <aside className="w-full md:w-64 bg-white border-b md:border-b-0 md:border-r border-brand-slate/15 flex flex-col justify-between shrink-0 self-stretch">
       <div className="p-4 md:p-6 space-y-4 md:space-y-8">
-        <div className="flex items-center gap-3">
-          <div className="relative w-8 h-8 rounded-xl flex items-center justify-center text-white shrink-0 overflow-hidden p-1.5">
-            <Image
-              src="/Maskanny.svg"
-              alt="Maskanny Logo"
-              fill
-              className="object-contain p-1"
-            />
-          </div>
-          <div className="flex flex-col">
-            <span className="font-bold text-brand-navy text-lg tracking-tight">
-              Maskanny
-            </span>
-          </div>
-        </div>
+        <Link
+  href="/"
+  aria-label="Go to Maskanny homepage"
+  className="flex w-fit items-center gap-3 rounded-xl cursor-pointer hover:opacity-80 transition-opacity"
+>
+  <div className="relative w-8 h-8 shrink-0 overflow-hidden rounded-xl">
+    <Image
+      src="/Maskanny.svg"
+      alt="Maskanny Logo"
+      fill
+      className="object-contain p-1"
+    />
+  </div>
+
+  <span className="text-lg font-bold tracking-tight text-brand-navy">
+    Maskanny
+  </span>
+</Link>
 
         <nav aria-label="Owner sections" className="grid grid-cols-2 sm:grid-cols-3 md:block gap-1.5 md:space-y-1.5">
           {navItems.map((item) => {

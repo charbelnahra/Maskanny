@@ -8,6 +8,7 @@ import { AnalyticsChart } from '@/src/components/owner/AnalyticsChart';
 import { CategoryDonuts } from '@/src/components/owner/CategoryDonuts';
 import { useRouter } from 'next/navigation';
 
+
 import {
   Plus,
   Trash2,
@@ -23,23 +24,9 @@ import {
   Globe,
   HelpCircle,
   AlertCircle,
-  Building2,
   MapPin,
-  DollarSign,
   BedDouble,
-  Wifi,
-  Zap,
-  Droplets,
-  Wind,
-  Flame,
-  Utensils,
-  WashingMachine,
-  Car,
-  ShieldCheck,
-  ArrowUpDown,
   Home,
-  BookOpen,
-  Image as ImageIcon,
   Upload,
   Check,
   Send,
@@ -598,8 +585,7 @@ export default function OwnerDashboardPage() {
               <h2 className="text-xl font-bold text-brand-navy">
                 {activeTab === 'My Listings'
                   ? 'My Properties & Dorms'
-                  : activeTab === 'Add Listing'
-                    ? 'Add New Listing'
+                 
                     : activeTab === 'Review' ||
                       activeTab === 'Reviews' ||
                       activeTab === 'Review Submissions'
@@ -612,8 +598,7 @@ export default function OwnerDashboardPage() {
               <p className="text-xs text-brand-slate mt-1">
                 {activeTab === 'My Listings'
                   ? 'Manage, edit or delete your student housing units and dorms.'
-                  : activeTab === 'Add Listing'
-                    ? 'Add your property details to make it available to students on Maskanny.'
+              
                     : activeTab === 'Review' ||
                       activeTab === 'Reviews' ||
                       activeTab === 'Review Submissions'
@@ -826,7 +811,10 @@ export default function OwnerDashboardPage() {
 
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <button
-                  onClick={() => setActiveTab('Add Listing')}
+                  onClick={() =>{ 
+                    setActiveTab('Add Listing');
+                    router.push("/AddListing")
+                  }}
                   className="inline-flex items-center justify-center gap-2
         bg-brand-navy text-white px-4 py-2.5 rounded-xl
         text-sm font-bold hover:bg-brand-navy/90
@@ -1139,1534 +1127,737 @@ export default function OwnerDashboardPage() {
               </div>
 
             </div>
-
-          ) : activeTab === 'Add Listing' ? (
-            <div className="w-full max-w-5xl mx-auto space-y-6">
-
-
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-
-                  const formData = new FormData(e.currentTarget);
-
-                  const newListing: OwnerSubmission = {
-                    id: `prop-${Date.now().toString().slice(-3)}`,
-                    property: formData.get("property") as string,
-                    host: "You",
-                    price: Number(formData.get("price")),
-                    status: "Pending Review",
-                    category: formData.get("category") as
-                      | "STUDIO"
-                      | "DORM"
-                      | "SHARED",
-                    createdAt: new Date().toISOString().split("T")[0],
-                    imageUrl:
-                      "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=150&auto=format&fit=crop&q=80",
-
-                    description: formData.get("description") as string,
-                    propertyType: formData.get("propertyType") as
-                      | "Apartment"
-                      | "Dorm"
-                      | "Studio"
-                      | "Shared Apartment",
-                    roomType: formData.get("roomType") as
-                      | "Private Room"
-                      | "Shared Room"
-                      | "Studio",
-
-                    location: formData.get("location") as string,
-                    city: formData.get("city") as string,
-                    area: formData.get("area") as string,
-                    university: formData.get("university") as string,
-                    distanceToUniversity: formData.get("distanceToUniversity") as string,
-
-                    beds: Number(formData.get("beds")),
-                    bathrooms: Number(formData.get("bathrooms")),
-                    rooms: Number(formData.get("rooms")),
-                    size: Number(formData.get("size")),
-
-                    furnishing: formData.get("furnishing") as
-                      | "Furnished"
-                      | "Unfurnished",
-
-                    availableRooms: Number(formData.get("availableRooms")),
-
-                    amenities: formData.getAll("amenities") as string[],
-
-                    photos: [],
-                  };
-
-                  handleAddListing(newListing);
-
-                  setActiveTab("My Listings");
-
-                  triggerSuccess("Listing added and submitted for review.");
-                }}
-                className="w-full max-w-4xl mx-auto space-y-6"
-              >
-
-                <div className="xl:col-span-2 space-y-6">
-
-
-                  <div className="bg-white rounded-2xl border border-brand-slate/15 shadow-sm">
-                    <div className="p-6 border-b border-brand-slate/10">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-brand-navy/10 flex items-center justify-center">
-                          <Building2 className="w-5 h-5 text-brand-navy" />
-                        </div>
-
-                        <div>
-                          <h3 className="font-bold text-brand-navy">
-                            Basic Information
-                          </h3>
-                          <p className="text-xs text-brand-slate mt-0.5">
-                            Tell students about your accommodation
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="p-6 space-y-5">
-
-
-                      <div>
-                        <label className="block text-sm font-semibold text-brand-navy mb-2">
-                          Listing Title <span className="text-red-500">*</span>
-                        </label>
-
-                        <input
-                          type="text"
-                          name="property"
-                          required
-                          placeholder="e.g. Modern Student Apartment Near Lebanese University"
-                          className="w-full px-4 py-3 rounded-xl border border-brand-slate/20
-    bg-white text-sm text-brand-navy
-    placeholder:text-brand-slate/50
-    focus:outline-none focus:ring-2 focus:ring-brand-navy/20
-    focus:border-brand-navy transition"
-                        />
-                      </div>
-
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-
-                        <div>
-                          <label className="block text-sm font-semibold text-brand-navy mb-2">
-                            Property Type <span className="text-red-500">*</span>
-                          </label>
-
-                          <select
-                            name="propertyType"
-                            required
-                            className="w-full px-4 py-3 rounded-xl border border-brand-slate/20
-    bg-white text-sm text-brand-navy
-    focus:outline-none focus:ring-2 focus:ring-brand-navy/20
-    focus:border-brand-navy transition"
-                          >
-                            <option value="">Select property type</option>
-                            <option value="Apartment">Apartment</option>
-                            <option value="Dorm">Dorm</option>
-                            <option value="Studio">Studio</option>
-                            <option value="Shared Apartment">Shared Apartment</option>
-                          </select>
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-semibold text-brand-navy mb-2">
-                            Room Type
-                          </label>
-
-                          <select
-                            name="roomType"
-                            className="w-full px-4 py-3 rounded-xl border border-brand-slate/20
-    bg-white text-sm text-brand-navy
-    focus:outline-none focus:ring-2 focus:ring-brand-navy/20
-    focus:border-brand-navy transition"
-                          >
-                            <option value="">Select room type</option>
-                            <option value="Private Room">Private Room</option>
-                            <option value="Shared Room">Shared Room</option>
-                            <option value="Studio">Studio</option>
-                          </select>
-                        </div>
-
-                      </div>
-
-
-                      <div>
-                        <div className="flex items-center justify-between mb-2">
-                          <label className="text-sm font-semibold text-brand-navy">
-                            Description <span className="text-red-500">*</span>
-                          </label>
-
-                          <span className="text-xs text-brand-slate">
-                            0 / 1000
-                          </span>
-                        </div>
-
-                        <textarea
-                          name="description"
-                          required
-                          rows={5}
-                          placeholder="Describe the accommodation, its surroundings, nearby universities, transportation, and anything students should know..."
-                          className="w-full px-4 py-3 rounded-xl border border-brand-slate/20
-    bg-white text-sm text-brand-navy resize-none
-    placeholder:text-brand-slate/50
-    focus:outline-none focus:ring-2 focus:ring-brand-navy/20
-    focus:border-brand-navy transition"
-                        />
-                      </div>
-
-                    </div>
-                  </div>
-
-
-                  <div className="bg-white rounded-2xl border border-brand-slate/15 shadow-sm">
-
-                    <div className="p-6 border-b border-brand-slate/10">
-                      <div className="flex items-center gap-3">
-
-                        <div className="w-10 h-10 rounded-xl bg-brand-gold/15 flex items-center justify-center">
-                          <MapPin className="w-5 h-5 text-brand-gold" />
-                        </div>
-
-                        <div>
-                          <h3 className="font-bold text-brand-navy">
-                            Location
-                          </h3>
-
-                          <p className="text-xs text-brand-slate mt-0.5">
-                            Help students understand where the property is located
-                          </p>
-                        </div>
-
-                      </div>
-                    </div>
-
-                    <div className="p-6 space-y-5">
-
-
-                      <div>
-                        <label className="block text-sm font-semibold text-brand-navy mb-2">
-                          Address <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          name="location"
-                          required
-                          placeholder="Street, building name, or area"
-                          className="w-full px-4 py-3 rounded-xl border border-brand-slate/20
-    text-sm text-brand-navy
-    placeholder:text-brand-slate/50
-    focus:outline-none focus:ring-2 focus:ring-brand-navy/20
-    focus:border-brand-navy transition"
-                        />
-                      </div>
-
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-
-                        <div>
-                          <label className="block text-sm font-semibold text-brand-navy mb-2">
-                            City
-                          </label>
-
-                          <select
-                            name="city"
-                            className="w-full px-4 py-3 rounded-xl border border-brand-slate/20
-    bg-white text-sm text-brand-navy
-    focus:outline-none focus:ring-2 focus:ring-brand-navy/20
-    focus:border-brand-navy transition"
-                          >
-                            <option value="">Select city</option>
-                            <option value="Beirut">Beirut</option>
-                            <option value="Tripoli">Tripoli</option>
-                            <option value="Sidon">Sidon</option>
-                            <option value="Jounieh">Jounieh</option>
-                            <option value="Zahle">Zahle</option>
-                            <option value="Baalbek">Baalbek</option>
-                            <option value="Byblos">Byblos</option>
-                            <option value="Other">Other</option>
-                          </select>
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-semibold text-brand-navy mb-2">
-                            Area
-                          </label>
-
-                          <input
-                            type="text"
-                            name="area"
-                            placeholder="e.g. Hamra, Cola, Badaro..."
-                            className="w-full px-4 py-3 rounded-xl border border-brand-slate/20
-    text-sm text-brand-navy
-    placeholder:text-brand-slate/50
-    focus:outline-none focus:ring-2 focus:ring-brand-navy/20
-    focus:border-brand-navy transition"
-                          />
-                        </div>
-
-                      </div>
-
-
-                      <div>
-                        <label className="block text-sm font-semibold text-brand-navy mb-2">
-                          Nearby University
-                        </label>
-
-                        <select
-                          name="university"
-                          className="w-full px-4 py-3 rounded-xl border border-brand-slate/20
-    bg-white text-sm text-brand-navy
-    focus:outline-none focus:ring-2 focus:ring-brand-navy/20
-    focus:border-brand-navy transition"
-                        >
-                          <option value="">Select university</option>
-                          <option value="Lebanese University">Lebanese University</option>
-                          <option value="American University of Beirut">
-                            American University of Beirut
-                          </option>
-                          <option value="Lebanese American University">
-                            Lebanese American University
-                          </option>
-                          <option value="University of Saint Joseph">
-                            University of Saint Joseph
-                          </option>
-                          <option value="Beirut Arab University">
-                            Beirut Arab University
-                          </option>
-                          <option value="Notre Dame University">
-                            Notre Dame University
-                          </option>
-                          <option value="Other">Other</option>
-                        </select>
-                      </div>
-
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-
-                        <div>
-                          <label className="block text-sm font-semibold text-brand-navy mb-2">
-                            Distance to University
-                          </label>
-
-                          <div className="relative">
-                            <input
-                              type="number"
-                              name="distanceToUniversity"
-                              min="0"
-                              step="0.1"
-                              placeholder="e.g. 1.5"
-                              className="w-full px-4 py-3 pr-16 rounded-xl border border-brand-slate/20
-    text-sm text-brand-navy
-    placeholder:text-brand-slate/50
-    focus:outline-none focus:ring-2 focus:ring-brand-navy/20
-    focus:border-brand-navy transition"
-                            />
-
-                            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-brand-slate">
-                              km
-                            </span>
-                          </div>
-                        </div>
-
-                      </div>
-
-                    </div>
-                  </div>
-
-
-                  <div className="bg-white rounded-2xl border border-brand-slate/15 shadow-sm">
-
-                    <div className="p-6 border-b border-brand-slate/10">
-
-                      <div className="flex items-center gap-3">
-
-                        <div className="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center">
-                          <DollarSign className="w-5 h-5 text-green-600" />
-                        </div>
-
-                        <div>
-                          <h3 className="font-bold text-brand-navy">
-                            Pricing & Availability
-                          </h3>
-
-                          <p className="text-xs text-brand-slate mt-0.5">
-                            Set the rent and availability details
-                          </p>
-                        </div>
-
-                      </div>
-
-                    </div>
-
-                    <div className="p-6 space-y-5">
-
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-
-
-                        <div>
-                          <label className="block text-sm font-semibold text-brand-navy mb-2">
-                            Monthly Rent <span className="text-red-500">*</span>
-                          </label>
-
-                          <div className="relative">
-
-                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-medium text-brand-slate">
-                              $
-                            </span>
-
-                            <input
-                              type="number"
-                              name="price"
-                              required
-                              min="0"
-                              placeholder="500"
-                              className="w-full pl-9 pr-4 py-3 rounded-xl border border-brand-slate/20
-    text-sm text-brand-navy
-    placeholder:text-brand-slate/50
-    focus:outline-none focus:ring-2 focus:ring-brand-navy/20
-    focus:border-brand-navy transition"
-                            />
-
-                          </div>
-                        </div>
-
-
-                        <div>
-                          <label className="block text-sm font-semibold text-brand-navy mb-2">
-                            Security Deposit
-                          </label>
-
-                          <div className="relative">
-
-                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-brand-slate">
-                              $
-                            </span>
-
-                            <input
-                              type="number"
-                              min="0"
-                              placeholder="500"
-                              className="w-full pl-9 pr-4 py-3 rounded-xl border border-brand-slate/20
-                    text-sm text-brand-navy
-                    placeholder:text-brand-slate/50
-                    focus:outline-none focus:ring-2 focus:ring-brand-navy/20
-                    focus:border-brand-navy transition"
-                            />
-
-                          </div>
-                        </div>
-
-
-                        <div>
-                          <label className="block text-sm font-semibold text-brand-navy mb-2">
-                            Available Rooms
-                          </label>
-
-                          <input
-                            type="number"
-                            name="availableRooms"
-                            min="1"
-                            placeholder="2"
-                            className="w-full px-4 py-3 rounded-xl border border-brand-slate/20
-    text-sm text-brand-navy
-    placeholder:text-brand-slate/50
-    focus:outline-none focus:ring-2 focus:ring-brand-navy/20
-    focus:border-brand-navy transition"
-                          />
-                        </div>
-
-                      </div>
-
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-
-                        <div>
-                          <label className="block text-sm font-semibold text-brand-navy mb-2">
-                            Available From
-                          </label>
-
-                          <input
-                            type="date"
-                            className="w-full px-4 py-3 rounded-xl border border-brand-slate/20
-                  text-sm text-brand-navy
-                  focus:outline-none focus:ring-2 focus:ring-brand-navy/20
-                  focus:border-brand-navy transition"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-semibold text-brand-navy mb-2">
-                            Listing Status
-                          </label>
-
-                          <select
-                            className="w-full px-4 py-3 rounded-xl border border-brand-slate/20
-                  bg-white text-sm text-brand-navy
-                  focus:outline-none focus:ring-2 focus:ring-brand-navy/20
-                  focus:border-brand-navy transition"
-                          >
-                            <option>Available</option>
-                            <option>Almost Full</option>
-                            <option>Full</option>
-                          </select>
-                        </div>
-
-                      </div>
-
-                    </div>
-                  </div>
-
-
-                  <div className="bg-white rounded-2xl border border-brand-slate/15 shadow-sm">
-
-                    <div className="p-6 border-b border-brand-slate/10">
-
-                      <div className="flex items-center gap-3">
-
-                        <div className="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center">
-                          <BedDouble className="w-5 h-5 text-purple-600" />
-                        </div>
-
-                        <div>
-                          <h3 className="font-bold text-brand-navy">
-                            Property Details
-                          </h3>
-
-                          <p className="text-xs text-brand-slate mt-0.5">
-                            Add information about the accommodation
-                          </p>
-                        </div>
-
-                      </div>
-
-                    </div>
-
-                    <div className="p-6">
-
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-
-
-                        <div>
-                          <label className="block text-xs font-semibold text-brand-slate mb-2">
-                            Beds
-                          </label>
-
-                          <input
-                            type="number"
-                            name="beds"
-                            min="1"
-                            placeholder="2"
-                            className="w-full px-4 py-3 rounded-xl border border-brand-slate/20
-    text-sm text-brand-navy
-    focus:outline-none focus:ring-2 focus:ring-brand-navy/20"
-                          />
-                        </div>
-
-
-                        <div>
-                          <label className="block text-xs font-semibold text-brand-slate mb-2">
-                            Bathrooms
-                          </label>
-
-                          <input
-                            type="number"
-                            name="bathrooms"
-                            min="1"
-                            placeholder="1"
-                            className="w-full px-4 py-3 rounded-xl border border-brand-slate/20
-    text-sm text-brand-navy
-    focus:outline-none focus:ring-2 focus:ring-brand-navy/20"
-                          />
-                        </div>
-
-
-                        <div>
-                          <label className="block text-xs font-semibold text-brand-slate mb-2">
-                            Max Guests
-                          </label>
-
-                          <input
-                            type="number"
-                            min="1"
-                            placeholder="2"
-                            className="w-full px-4 py-3 rounded-xl border border-brand-slate/20
-                  text-sm text-brand-navy
-                  focus:outline-none focus:ring-2 focus:ring-brand-navy/20"
-                          />
-                        </div>
-
-
-                        <div>
-                          <label className="block text-xs font-semibold text-brand-slate mb-2">
-                            Size
-                          </label>
-
-                          <div className="relative">
-
-                            <input
-                              type="number"
-                              name="size"
-                              min="0"
-                              placeholder="80"
-                              className="w-full px-4 py-3 pr-12 rounded-xl border border-brand-slate/20
-    text-sm text-brand-navy
-    focus:outline-none focus:ring-2 focus:ring-brand-navy/20"
-                            />
-
-                            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-brand-slate">
-                              m²
-                            </span>
-
-                          </div>
-                        </div>
-
-                      </div>
-
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
-
-                        <div>
-                          <label className="block text-sm font-semibold text-brand-navy mb-2">
-                            Furnishing
-                          </label>
-
-                          <select
-                            name="furnishing"
-                            className="w-full px-4 py-3 rounded-xl border border-brand-slate/20
-    bg-white text-sm text-brand-navy
-    focus:outline-none focus:ring-2 focus:ring-brand-navy/20"
-                          >
-                            <option value="Furnished">Fully Furnished</option>
-                            <option value="Unfurnished">Unfurnished</option>
-                          </select>
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-semibold text-brand-navy mb-2">
-                            Preferred Tenant
-                          </label>
-
-                          <select
-                            className="w-full px-4 py-3 rounded-xl border border-brand-slate/20
-                  bg-white text-sm text-brand-navy
-                  focus:outline-none focus:ring-2 focus:ring-brand-navy/20"
-                          >
-                            <option>Any</option>
-                            <option>Male</option>
-                            <option>Female</option>
-                          </select>
-                        </div>
-
-                      </div>
-
-                    </div>
-                  </div>
-
-
-                  <div className="bg-white rounded-2xl border border-brand-slate/15 shadow-sm">
-
-                    <div className="p-6 border-b border-brand-slate/10">
-
-                      <div className="flex items-center gap-3">
-
-                        <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
-                          <Wifi className="w-5 h-5 text-blue-600" />
-                        </div>
-
-                        <div>
-                          <h3 className="font-bold text-brand-navy">
-                            Amenities
-                          </h3>
-
-                          <p className="text-xs text-brand-slate mt-0.5">
-                            Select the amenities available at this property
-                          </p>
-                        </div>
-
-                      </div>
-
-                    </div>
-
-                    <div className="p-6">
-
-                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-
-                        {[
-                          { label: "Wi-Fi", icon: Wifi },
-                          { label: "Electricity", icon: Zap },
-                          { label: "Water", icon: Droplets },
-                          { label: "Air Conditioning", icon: Wind },
-                          { label: "Heating", icon: Flame },
-                          { label: "Kitchen", icon: Utensils },
-                          { label: "Laundry", icon: WashingMachine },
-                          { label: "Parking", icon: Car },
-                          { label: "Security", icon: ShieldCheck },
-                          { label: "Elevator", icon: ArrowUpDown },
-                          { label: "Balcony", icon: Home },
-                          { label: "Study Area", icon: BookOpen },
-                        ].map((amenity) => {
-                          const Icon = amenity.icon;
-
-                          return (
-                            <label
-                              key={amenity.label}
-                              className="flex items-center gap-3 p-3.5 rounded-xl
-                    border border-brand-slate/15 cursor-pointer
-                    hover:border-brand-navy/30 hover:bg-brand-light/40
-                    transition group"
-                            >
-
-                              <input
-                                type="checkbox"
-                                name="amenities"
-                                value={amenity.label}
-                                className="w-4 h-4 rounded border-brand-slate/30
-    text-brand-navy focus:ring-brand-navy/20"
-                              />
-                              <Icon className="w-4 h-4 text-brand-slate group-hover:text-brand-navy transition" />
-
-                              <span className="text-xs font-medium text-brand-navy">
-                                {amenity.label}
-                              </span>
-
-                            </label>
-                          );
-                        })}
-
-                      </div>
-
-                    </div>
-                  </div>
-
-
-                  <div className="bg-white rounded-2xl border border-brand-slate/15 shadow-sm">
-
-                    <div className="p-6 border-b border-brand-slate/10">
-
-                      <div className="flex items-center gap-3">
-
-                        <div className="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center">
-                          <ImageIcon className="w-5 h-5 text-orange-600" />
-                        </div>
-
-                        <div>
-                          <h3 className="font-bold text-brand-navy">
-                            Property Photos
-                          </h3>
-
-                          <p className="text-xs text-brand-slate mt-0.5">
-                            Add clear photos to attract more students
-                          </p>
-                        </div>
-
-                      </div>
-
-                    </div>
-
-                    <div className="p-6">
-
-                      <label
-                        className="flex flex-col items-center justify-center
-              min-h-[220px] rounded-2xl border-2 border-dashed
-              border-brand-slate/20 bg-brand-light/20
-              hover:border-brand-navy/30 hover:bg-brand-light/40
-              transition cursor-pointer"
-                      >
-
-                        <div className="w-14 h-14 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-4">
-                          <Upload className="w-6 h-6 text-brand-navy" />
-                        </div>
-
-                        <p className="text-sm font-semibold text-brand-navy">
-                          Upload property photos
-                        </p>
-
-                        <p className="text-xs text-brand-slate mt-1">
-                          Drag & drop or click to browse
-                        </p>
-
-                        <p className="text-[11px] text-brand-slate/70 mt-3">
-                          PNG, JPG or WEBP · Maximum 5MB per image
-                        </p>
-
-                        <input
-                          type="file"
-                          multiple
-                          accept="image/png,image/jpeg,image/webp"
-                          className="hidden"
-                        />
-
-                      </label>
-
-                    </div>
-                  </div>
-
-                </div>
-
-
-                <div className="xl:col-span-3 flex items-center justify-end gap-3
-        bg-white border border-brand-slate/15 rounded-2xl p-4 shadow-sm">
-
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab("overview")}
-                    className="px-5 py-2.5 rounded-xl border border-brand-slate/20
-          text-sm font-semibold text-brand-slate
-          hover:bg-brand-light transition"
-                  >
-                    Cancel
-                  </button>
-
-                  <button
-                    type="submit"
-                    className="px-6 py-2.5 rounded-xl bg-brand-navy
-          text-sm font-semibold text-white
-          hover:bg-brand-navy/90 transition
-          flex items-center gap-2 shadow-sm"
-                  >
-                    <Send className="w-4 h-4" />
-                    Publish Listing
-                  </button>
-
-                </div>
-
-              </form>
-            </div>
           ) : activeTab === 'Review' ||
-            activeTab === 'Reviews' ||
-            activeTab === 'Review Submissions' ? (
+          activeTab === 'Reviews' ||
+          activeTab === 'Review Submissions' ? (
 
-            <div className="space-y-5">
+          <div className="space-y-5">
 
 
-              <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
 
-                <div className="rounded-2xl border border-brand-slate/10 bg-white p-5 shadow-sm">
-                  <p className="text-xs font-medium text-brand-slate">
-                    Average Rating
-                  </p>
+              <div className="rounded-2xl border border-brand-slate/10 bg-white p-5 shadow-sm">
+                <p className="text-xs font-medium text-brand-slate">
+                  Average Rating
+                </p>
 
-                  <div className="mt-3 flex items-center gap-3">
-                    <div>
-                      <span className="text-3xl font-bold text-brand-navy">
-                        4.8
-                      </span>
-                      <span className="text-xs text-brand-slate"> / 5</span>
-                    </div>
-
-                    <div className="flex gap-0.5 text-brand-gold">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Star
-                          key={star}
-                          className="h-4 w-4 fill-current"
-                        />
-                      ))}
-                    </div>
+                <div className="mt-3 flex items-center gap-3">
+                  <div>
+                    <span className="text-3xl font-bold text-brand-navy">
+                      4.8
+                    </span>
+                    <span className="text-xs text-brand-slate"> / 5</span>
                   </div>
 
-                  <p className="mt-1 text-xs text-brand-slate">
-                    Based on 48 reviews
-                  </p>
-                </div>
-
-
-                <div className="rounded-2xl border border-brand-slate/10 bg-white p-5 shadow-sm lg:col-span-2">
-                  <div className="mb-4 flex items-center justify-between">
-                    <h2 className="text-sm font-semibold text-brand-navy">
-                      Rating Distribution
-                    </h2>
-
-                    <BarChart3 className="h-4 w-4 text-brand-slate" />
-                  </div>
-
-                  <div className="space-y-2.5">
-                    {[
-                      { stars: 5, count: 32, percentage: 67 },
-                      { stars: 4, count: 10, percentage: 21 },
-                      { stars: 3, count: 4, percentage: 8 },
-                      { stars: 2, count: 1, percentage: 2 },
-                      { stars: 1, count: 1, percentage: 2 },
-                    ].map((rating) => (
-                      <div
-                        key={rating.stars}
-                        className="flex items-center gap-2.5"
-                      >
-                        <div className="flex w-12 items-center gap-1 text-xs text-brand-slate">
-                          <span>{rating.stars}</span>
-
-                          <Star className="h-3 w-3 fill-brand-gold text-brand-gold" />
-                        </div>
-
-                        <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-brand-light">
-                          <div
-                            className="h-full rounded-full bg-brand-gold"
-                            style={{
-                              width: `${rating.percentage}%`,
-                            }}
-                          />
-                        </div>
-
-                        <span className="w-6 text-right text-xs font-medium text-brand-slate">
-                          {rating.count}
-                        </span>
-                      </div>
+                  <div className="flex gap-0.5 text-brand-gold">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star
+                        key={star}
+                        className="h-4 w-4 fill-current"
+                      />
                     ))}
                   </div>
                 </div>
+
+                <p className="mt-1 text-xs text-brand-slate">
+                  Based on 48 reviews
+                </p>
               </div>
 
 
-              <div className="rounded-2xl border border-brand-slate/10 bg-white p-3 shadow-sm">
-                <div className="flex flex-col gap-2.5 md:flex-row">
+              <div className="rounded-2xl border border-brand-slate/10 bg-white p-5 shadow-sm lg:col-span-2">
+                <div className="mb-4 flex items-center justify-between">
+                  <h2 className="text-sm font-semibold text-brand-navy">
+                    Rating Distribution
+                  </h2>
 
-                  <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-brand-slate" />
-
-                    <input
-                      type="text"
-                      value={reviewSearch}
-                      onChange={(e) => setReviewSearch(e.target.value)}
-                      placeholder="Search reviews..."
-                      className="w-full rounded-xl border border-brand-slate/15 bg-brand-light/30 py-2 pl-9 pr-3 text-xs text-brand-navy outline-none transition focus:border-brand-gold focus:ring-2 focus:ring-brand-gold/20"
-                    />
-                  </div>
-
-
-                  <select
-                    value={reviewRating}
-                    onChange={(e) => setReviewRating(e.target.value)}
-                    className="rounded-xl border border-brand-slate/15 bg-white px-3 py-2 text-xs text-brand-navy outline-none transition focus:border-brand-gold focus:ring-2 focus:ring-brand-gold/20">
-
-                    <option value="all">All ratings</option>
-                    <option value="5">5 Stars</option>
-                    <option value="4">4 Stars</option>
-                    <option value="3">3 Stars</option>
-                    <option value="2">2 Stars</option>
-                    <option value="1">1 Star</option>
-                  </select>
+                  <BarChart3 className="h-4 w-4 text-brand-slate" />
                 </div>
-              </div>
 
+                <div className="space-y-2.5">
+                  {[
+                    { stars: 5, count: 32, percentage: 67 },
+                    { stars: 4, count: 10, percentage: 21 },
+                    { stars: 3, count: 4, percentage: 8 },
+                    { stars: 2, count: 1, percentage: 2 },
+                    { stars: 1, count: 1, percentage: 2 },
+                  ].map((rating) => (
+                    <div
+                      key={rating.stars}
+                      className="flex items-center gap-2.5"
+                    >
+                      <div className="flex w-12 items-center gap-1 text-xs text-brand-slate">
+                        <span>{rating.stars}</span>
 
-              <div className="space-y-3">
-
-                {filteredReviews.map((review, index) => (
-                  <div
-                    key={index}
-                    className="rounded-2xl border border-brand-slate/10 bg-white p-4 shadow-sm transition hover:shadow-md"
-                  >
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-
-                      <div className="flex gap-3">
-
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-navy text-xs font-semibold text-white">
-                          {review.name
-                            .split(" ")
-                            .map((word) => word[0])
-                            .join("")}
-                        </div>
-
-                        <div>
-
-                          <h3 className="text-sm font-semibold text-brand-navy">
-                            {review.name}
-                          </h3>
-
-
-                          <div className="mt-1 flex gap-0.5">
-                            {[1, 2, 3, 4, 5].map((star) => (
-                              <Star
-                                key={star}
-                                className={`h-3.5 w-3.5 ${star <= review.rating
-                                  ? "fill-brand-gold text-brand-gold"
-                                  : "text-brand-slate/20"
-                                  }`}
-                              />
-                            ))}
-                          </div>
-
-
-                          <p className="mt-2 text-xs leading-5 text-brand-slate">
-                            {review.comment}
-                          </p>
-                        </div>
+                        <Star className="h-3 w-3 fill-brand-gold text-brand-gold" />
                       </div>
 
+                      <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-brand-light">
+                        <div
+                          className="h-full rounded-full bg-brand-gold"
+                          style={{
+                            width: `${rating.percentage}%`,
+                          }}
+                        />
+                      </div>
 
-                      <span className="shrink-0 text-[11px] font-medium text-brand-slate">
-                        {review.date}
+                      <span className="w-6 text-right text-xs font-medium text-brand-slate">
+                        {rating.count}
                       </span>
                     </div>
-
-
-                    <div className="mt-3 border-t border-brand-slate/10 pt-3">
-                      <p className="text-[11px] text-brand-slate">
-                        Listing
-                      </p>
-
-                      <p className="mt-0.5 text-xs font-semibold text-brand-navy">
-                        {review.listing}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-                {filteredReviews.length === 0 && (
-                  <div className="rounded-2xl border border-brand-slate/10 bg-white p-8 text-center">
-                    <Search className="mx-auto h-6 w-6 text-brand-slate/50" />
-
-                    <p className="mt-2 text-sm font-semibold text-brand-navy">
-                      No reviews found
-                    </p>
-
-                    <p className="mt-1 text-xs text-brand-slate">
-                      Try a different search term or rating.
-                    </p>
-                  </div>
-                )}
+                  ))}
+                </div>
               </div>
             </div>
 
-          ) : activeTab === 'Settings - Profile' ? (
-            <div className="bg-white rounded-2xl border border-brand-slate/10 p-6 shadow-sm max-w-4xl mx-auto w-full">
 
-              <div className="flex items-center gap-3 pb-5 border-b border-brand-slate/10">
-                <div className="w-10 h-10 rounded-xl bg-brand-navy/5 text-brand-navy flex items-center justify-center">
-                  <User className="w-5 h-5" />
+            <div className="rounded-2xl border border-brand-slate/10 bg-white p-3 shadow-sm">
+              <div className="flex flex-col gap-2.5 md:flex-row">
+
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-brand-slate" />
+
+                  <input
+                    type="text"
+                    value={reviewSearch}
+                    onChange={(e) => setReviewSearch(e.target.value)}
+                    placeholder="Search reviews..."
+                    className="w-full rounded-xl border border-brand-slate/15 bg-brand-light/30 py-2 pl-9 pr-3 text-xs text-brand-navy outline-none transition focus:border-brand-gold focus:ring-2 focus:ring-brand-gold/20"
+                  />
+                </div>
+
+
+                <select
+                  value={reviewRating}
+                  onChange={(e) => setReviewRating(e.target.value)}
+                  className="rounded-xl border border-brand-slate/15 bg-white px-3 py-2 text-xs text-brand-navy outline-none transition focus:border-brand-gold focus:ring-2 focus:ring-brand-gold/20">
+
+                  <option value="all">All ratings</option>
+                  <option value="5">5 Stars</option>
+                  <option value="4">4 Stars</option>
+                  <option value="3">3 Stars</option>
+                  <option value="2">2 Stars</option>
+                  <option value="1">1 Star</option>
+                </select>
+              </div>
+            </div>
+
+
+            <div className="space-y-3">
+
+              {filteredReviews.map((review, index) => (
+                <div
+                  key={index}
+                  className="rounded-2xl border border-brand-slate/10 bg-white p-4 shadow-sm transition hover:shadow-md"
+                >
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+
+                    <div className="flex gap-3">
+
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-navy text-xs font-semibold text-white">
+                        {review.name
+                          .split(" ")
+                          .map((word) => word[0])
+                          .join("")}
+                      </div>
+
+                      <div>
+
+                        <h3 className="text-sm font-semibold text-brand-navy">
+                          {review.name}
+                        </h3>
+
+
+                        <div className="mt-1 flex gap-0.5">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star
+                              key={star}
+                              className={`h-3.5 w-3.5 ${star <= review.rating
+                                ? "fill-brand-gold text-brand-gold"
+                                : "text-brand-slate/20"
+                                }`}
+                            />
+                          ))}
+                        </div>
+
+
+                        <p className="mt-2 text-xs leading-5 text-brand-slate">
+                          {review.comment}
+                        </p>
+                      </div>
+                    </div>
+
+
+                    <span className="shrink-0 text-[11px] font-medium text-brand-slate">
+                      {review.date}
+                    </span>
+                  </div>
+
+
+                  <div className="mt-3 border-t border-brand-slate/10 pt-3">
+                    <p className="text-[11px] text-brand-slate">
+                      Listing
+                    </p>
+
+                    <p className="mt-0.5 text-xs font-semibold text-brand-navy">
+                      {review.listing}
+                    </p>
+                  </div>
+                </div>
+              ))}
+              {filteredReviews.length === 0 && (
+                <div className="rounded-2xl border border-brand-slate/10 bg-white p-8 text-center">
+                  <Search className="mx-auto h-6 w-6 text-brand-slate/50" />
+
+                  <p className="mt-2 text-sm font-semibold text-brand-navy">
+                    No reviews found
+                  </p>
+
+                  <p className="mt-1 text-xs text-brand-slate">
+                    Try a different search term or rating.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          ) : activeTab === 'Settings - Profile' ? (
+          <div className="bg-white rounded-2xl border border-brand-slate/10 p-6 shadow-sm max-w-4xl mx-auto w-full">
+
+            <div className="flex items-center gap-3 pb-5 border-b border-brand-slate/10">
+              <div className="w-10 h-10 rounded-xl bg-brand-navy/5 text-brand-navy flex items-center justify-center">
+                <User className="w-5 h-5" />
+              </div>
+
+              <div>
+                <h3 className="text-base font-bold text-brand-navy">
+                  Profile & Account
+                </h3>
+                <p className="text-xs text-brand-slate mt-0.5">
+                  Manage your personal and contact information.
+                </p>
+              </div>
+            </div>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                triggerSuccess("Profile updated successfully.");
+              }}
+              className="mt-6 space-y-6"
+            >
+
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 rounded-full bg-brand-navy text-white flex items-center justify-center text-base font-bold">
+                  OW
                 </div>
 
                 <div>
-                  <h3 className="text-base font-bold text-brand-navy">
-                    Profile & Account
-                  </h3>
-                  <p className="text-xs text-brand-slate mt-0.5">
-                    Manage your personal and contact information.
+                  <input
+                    id="avatar-upload"
+                    type="file"
+                    accept="image/png,image/jpeg,image/gif"
+                    className="hidden"
+                    onChange={(e) => {
+                      if (e.target.files?.[0]) {
+                        triggerSuccess("Avatar selected successfully.");
+                      }
+                    }}
+                  />
+
+                  <label
+                    htmlFor="avatar-upload"
+                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-light border border-brand-slate/10 text-sm font-semibold text-brand-navy cursor-pointer hover:bg-brand-slate/10 active:scale-[0.98] transition"
+                  >
+                    <Upload className="w-4 h-4" />
+                    Change Avatar
+                  </label>
+
+                  <p className="mt-1.5 text-xs text-brand-slate">
+                    JPG, PNG or GIF • Max 2MB
                   </p>
                 </div>
               </div>
 
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  triggerSuccess("Profile updated successfully.");
-                }}
-                className="mt-6 space-y-6"
-              >
 
-                <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-full bg-brand-navy text-white flex items-center justify-center text-base font-bold">
-                    OW
-                  </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-xs font-semibold text-brand-navy mb-2">
+                    Full Name
+                  </label>
 
-                  <div>
-                    <input
-                      id="avatar-upload"
-                      type="file"
-                      accept="image/png,image/jpeg,image/gif"
-                      className="hidden"
-                      onChange={(e) => {
-                        if (e.target.files?.[0]) {
-                          triggerSuccess("Avatar selected successfully.");
-                        }
-                      }}
-                    />
-
-                    <label
-                      htmlFor="avatar-upload"
-                      className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-light border border-brand-slate/10 text-sm font-semibold text-brand-navy cursor-pointer hover:bg-brand-slate/10 active:scale-[0.98] transition"
-                    >
-                      <Upload className="w-4 h-4" />
-                      Change Avatar
-                    </label>
-
-                    <p className="mt-1.5 text-xs text-brand-slate">
-                      JPG, PNG or GIF • Max 2MB
-                    </p>
-                  </div>
+                  <input
+                    type="text"
+                    defaultValue="Owner Workspace"
+                    className="w-full px-3.5 py-3 rounded-xl border border-brand-slate/15 text-sm text-brand-navy outline-none focus:border-brand-navy focus:ring-2 focus:ring-brand-navy/10 transition"
+                  />
                 </div>
 
+                <div>
+                  <label className="block text-xs font-semibold text-brand-navy mb-2">
+                    Email Address
+                  </label>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <div>
-                    <label className="block text-xs font-semibold text-brand-navy mb-2">
-                      Full Name
-                    </label>
-
-                    <input
-                      type="text"
-                      defaultValue="Owner Workspace"
-                      className="w-full px-3.5 py-3 rounded-xl border border-brand-slate/15 text-sm text-brand-navy outline-none focus:border-brand-navy focus:ring-2 focus:ring-brand-navy/10 transition"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-semibold text-brand-navy mb-2">
-                      Email Address
-                    </label>
-
-                    <input
-                      type="email"
-                      defaultValue="owner@maskanny.com"
-                      className="w-full px-3.5 py-3 rounded-xl border border-brand-slate/15 text-sm text-brand-navy outline-none focus:border-brand-navy focus:ring-2 focus:ring-brand-navy/10 transition"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-semibold text-brand-navy mb-2">
-                      Phone Number
-                    </label>
-
-                    <input
-                      type="tel"
-                      placeholder="+961 XX XXX XXX"
-                      className="w-full px-3.5 py-3 rounded-xl border border-brand-slate/15 text-sm text-brand-navy outline-none focus:border-brand-navy focus:ring-2 focus:ring-brand-navy/10 transition"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-semibold text-brand-navy mb-2">
-                      Account Type
-                    </label>
-
-                    <input
-                      type="text"
-                      value="Property Owner"
-                      disabled
-                      className="w-full px-3.5 py-3 rounded-xl border border-brand-slate/10 bg-brand-light text-sm text-brand-slate"
-                    />
-                  </div>
+                  <input
+                    type="email"
+                    defaultValue="owner@maskanny.com"
+                    className="w-full px-3.5 py-3 rounded-xl border border-brand-slate/15 text-sm text-brand-navy outline-none focus:border-brand-navy focus:ring-2 focus:ring-brand-navy/10 transition"
+                  />
                 </div>
 
+                <div>
+                  <label className="block text-xs font-semibold text-brand-navy mb-2">
+                    Phone Number
+                  </label>
 
-                <div className="flex justify-end border-t border-brand-slate/10 pt-5">
-                  <button
-                    type="submit"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-navy text-white text-sm font-semibold hover:bg-brand-navy/90 active:scale-[0.98] transition shadow-sm"
-                  >
-                    <Check className="w-4 h-4" />
-                    Save Changes
-                  </button>
+                  <input
+                    type="tel"
+                    placeholder="+961 XX XXX XXX"
+                    className="w-full px-3.5 py-3 rounded-xl border border-brand-slate/15 text-sm text-brand-navy outline-none focus:border-brand-navy focus:ring-2 focus:ring-brand-navy/10 transition"
+                  />
                 </div>
-              </form>
-            </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-brand-navy mb-2">
+                    Account Type
+                  </label>
+
+                  <input
+                    type="text"
+                    value="Property Owner"
+                    disabled
+                    className="w-full px-3.5 py-3 rounded-xl border border-brand-slate/10 bg-brand-light text-sm text-brand-slate"
+                  />
+                </div>
+              </div>
+
+
+              <div className="flex justify-end border-t border-brand-slate/10 pt-5">
+                <button
+                  type="submit"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-navy text-white text-sm font-semibold hover:bg-brand-navy/90 active:scale-[0.98] transition shadow-sm"
+                >
+                  <Check className="w-4 h-4" />
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          </div>
 
           ) : activeTab === "Settings - Notifications" ? (
 
-            <div className="bg-white rounded-2xl border border-brand-slate/10 p-6 shadow-sm max-w-4xl mx-auto w-full">
+          <div className="bg-white rounded-2xl border border-brand-slate/10 p-6 shadow-sm max-w-4xl mx-auto w-full">
 
-              <div className="flex items-center gap-3 pb-5 border-b border-brand-slate/10">
-                <div className="w-10 h-10 rounded-xl bg-brand-navy/5 text-brand-navy flex items-center justify-center">
-                  <Bell className="w-5 h-5" />
-                </div>
-
-                <div>
-                  <h3 className="text-base font-bold text-brand-navy">
-                    Notifications
-                  </h3>
-                  <p className="text-xs text-brand-slate mt-0.5">
-                    Choose which updates you want to receive.
-                  </p>
-                </div>
+            <div className="flex items-center gap-3 pb-5 border-b border-brand-slate/10">
+              <div className="w-10 h-10 rounded-xl bg-brand-navy/5 text-brand-navy flex items-center justify-center">
+                <Bell className="w-5 h-5" />
               </div>
 
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  triggerSuccess("Notification preferences saved.");
-                }}
-                className="mt-6 space-y-3"
-              >
-                {[
-                  {
-                    label: "New student inquiries",
-                    desc: "Get notified when a student contacts you.",
-                  },
-                  {
-                    label: "New reviews & ratings",
-                    desc: "Receive an alert when a student leaves feedback.",
-                  },
-                  {
-                    label: "Listing status updates",
-                    desc: "Know when your listing is approved or rejected.",
-                  },
-                  {
-                    label: "Weekly performance summary",
-                    desc: "Receive a weekly overview of your listings.",
-                  },
-                ].map((item) => (
-                  <label
-                    key={item.label}
-                    className="flex items-center justify-between gap-5 p-4 rounded-xl border border-brand-slate/10 hover:bg-brand-light/40 transition cursor-pointer"
-                  >
-                    <div>
-                      <p className="text-sm font-semibold text-brand-navy">
-                        {item.label}
-                      </p>
-
-                      <p className="mt-1 text-xs text-brand-slate">
-                        {item.desc}
-                      </p>
-                    </div>
-
-                    <input
-                      type="checkbox"
-                      defaultChecked
-                      className="w-4 h-4 accent-brand-navy cursor-pointer shrink-0"
-                    />
-                  </label>
-                ))}
-
-                <div className="flex justify-end border-t border-brand-slate/10 pt-5">
-                  <button
-                    type="submit"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-navy text-white text-sm font-semibold hover:bg-brand-navy/90 active:scale-[0.98] transition shadow-sm"
-                  >
-                    <Check className="w-4 h-4" />
-                    Save Preferences
-                  </button>
-                </div>
-              </form>
+              <div>
+                <h3 className="text-base font-bold text-brand-navy">
+                  Notifications
+                </h3>
+                <p className="text-xs text-brand-slate mt-0.5">
+                  Choose which updates you want to receive.
+                </p>
+              </div>
             </div>
 
-          ) : activeTab === "Settings - Listing Preferences" ? (
-
-            <div className="bg-white rounded-2xl border border-brand-slate/10 p-6 shadow-sm max-w-4xl mx-auto w-full">
-              {/* Header */}
-              <div className="flex items-center gap-3 pb-5 border-b border-brand-slate/10">
-                <div className="w-10 h-10 rounded-xl bg-brand-navy/5 text-brand-navy flex items-center justify-center">
-                  <Sliders className="w-5 h-5" />
-                </div>
-
-                <div>
-                  <h3 className="text-base font-bold text-brand-navy">
-                    Listing Preferences
-                  </h3>
-                  <p className="text-xs text-brand-slate mt-0.5">
-                    Configure your default listing settings.
-                  </p>
-                </div>
-              </div>
-
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  triggerSuccess("Listing preferences saved.");
-                }}
-                className="mt-6 space-y-5"
-              >
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <div>
-                    <label className="block text-xs font-semibold text-brand-navy mb-2">
-                      Default Listing Visibility
-                    </label>
-
-                    <select className="w-full px-3.5 py-3 rounded-xl border border-brand-slate/15 bg-white text-sm text-brand-navy outline-none focus:border-brand-navy transition">
-                      <option>Public</option>
-                      <option>Private</option>
-                      <option>Admin Review Only</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-semibold text-brand-navy mb-2">
-                      Preferred Contact Channel
-                    </label>
-
-                    <select className="w-full px-3.5 py-3 rounded-xl border border-brand-slate/15 bg-white text-sm text-brand-navy outline-none focus:border-brand-navy transition">
-                      <option>In-App Chat & WhatsApp</option>
-                      <option>In-App Chat Only</option>
-                      <option>Phone / WhatsApp Only</option>
-                    </select>
-                  </div>
-                </div>
-
-                {[
-                  {
-                    title: "Automatically mark listing as full",
-                    description:
-                      "Automatically update the status when capacity is reached.",
-                  },
-                  {
-                    title: "Accept student inquiries",
-                    description:
-                      "Allow students to contact you through Maskanny.",
-                  },
-                ].map((item) => (
-                  <label
-                    key={item.title}
-                    className="flex items-center justify-between gap-5 p-4 rounded-xl border border-brand-slate/10 hover:bg-brand-light/40 transition cursor-pointer"
-                  >
-                    <div>
-                      <p className="text-sm font-semibold text-brand-navy">
-                        {item.title}
-                      </p>
-
-                      <p className="text-xs text-brand-slate mt-1">
-                        {item.description}
-                      </p>
-                    </div>
-
-                    <input
-                      type="checkbox"
-                      defaultChecked
-                      className="w-4 h-4 accent-brand-navy cursor-pointer"
-                    />
-                  </label>
-                ))}
-
-                <div className="flex justify-end border-t border-brand-slate/10 pt-5">
-                  <button
-                    type="submit"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-navy text-white text-sm font-semibold hover:bg-brand-navy/90 active:scale-[0.98] transition shadow-sm"
-                  >
-                    <Check className="w-4 h-4" />
-                    Save Settings
-                  </button>
-                </div>
-              </form>
-            </div>
-
-          ) : activeTab === "Settings - Security" ? (
-
-            <div className="bg-white rounded-2xl border border-brand-slate/10 p-6 shadow-sm max-w-4xl mx-auto w-full">
-
-              <div className="flex items-center gap-3 pb-5 border-b border-brand-slate/10">
-                <div className="w-10 h-10 rounded-xl bg-brand-navy/5 text-brand-navy flex items-center justify-center">
-                  <Shield className="w-5 h-5" />
-                </div>
-
-                <div>
-                  <h3 className="text-base font-bold text-brand-navy">
-                    Security
-                  </h3>
-                  <p className="text-xs text-brand-slate mt-0.5">
-                    Keep your Maskanny account secure.
-                  </p>
-                </div>
-              </div>
-
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-
-                  triggerSuccess("Security settings updated.");
-                }}
-                className="mt-6 space-y-5"
-              >
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <div>
-                    <label className="block text-xs font-semibold text-brand-navy mb-2">
-                      Current Password
-                    </label>
-
-                    <input
-                      type="password"
-                      placeholder="••••••••"
-                      className="w-full px-3.5 py-3 rounded-xl border border-brand-slate/15 text-sm outline-none focus:border-brand-navy focus:ring-2 focus:ring-brand-navy/10 transition"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-semibold text-brand-navy mb-2">
-                      New Password
-                    </label>
-
-                    <input
-                      type="password"
-                      placeholder="••••••••"
-                      className="w-full px-3.5 py-3 rounded-xl border border-brand-slate/15 text-sm outline-none focus:border-brand-navy focus:ring-2 focus:ring-brand-navy/10 transition"
-                    />
-                  </div>
-                </div>
-
-                <label className="flex items-center justify-between gap-5 p-4 rounded-xl border border-brand-slate/10 hover:bg-brand-light/40 transition cursor-pointer">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                triggerSuccess("Notification preferences saved.");
+              }}
+              className="mt-6 space-y-3"
+            >
+              {[
+                {
+                  label: "New student inquiries",
+                  desc: "Get notified when a student contacts you.",
+                },
+                {
+                  label: "New reviews & ratings",
+                  desc: "Receive an alert when a student leaves feedback.",
+                },
+                {
+                  label: "Listing status updates",
+                  desc: "Know when your listing is approved or rejected.",
+                },
+                {
+                  label: "Weekly performance summary",
+                  desc: "Receive a weekly overview of your listings.",
+                },
+              ].map((item) => (
+                <label
+                  key={item.label}
+                  className="flex items-center justify-between gap-5 p-4 rounded-xl border border-brand-slate/10 hover:bg-brand-light/40 transition cursor-pointer"
+                >
                   <div>
                     <p className="text-sm font-semibold text-brand-navy">
-                      Two-Factor Authentication
+                      {item.label}
                     </p>
 
-                    <p className="text-xs text-brand-slate mt-1">
-                      Add an extra layer of security to your account.
+                    <p className="mt-1 text-xs text-brand-slate">
+                      {item.desc}
                     </p>
                   </div>
 
                   <input
                     type="checkbox"
-                    className="w-4 h-4 accent-brand-navy cursor-pointer"
+                    defaultChecked
+                    className="w-4 h-4 accent-brand-navy cursor-pointer shrink-0"
                   />
                 </label>
+              ))}
 
-                <div className="flex items-center justify-between p-4 rounded-xl bg-brand-light/40 border border-brand-slate/10">
+              <div className="flex justify-end border-t border-brand-slate/10 pt-5">
+                <button
+                  type="submit"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-navy text-white text-sm font-semibold hover:bg-brand-navy/90 active:scale-[0.98] transition shadow-sm"
+                >
+                  <Check className="w-4 h-4" />
+                  Save Preferences
+                </button>
+              </div>
+            </form>
+          </div>
+
+          ) : activeTab === "Settings - Listing Preferences" ? (
+
+          <div className="bg-white rounded-2xl border border-brand-slate/10 p-6 shadow-sm max-w-4xl mx-auto w-full">
+            {/* Header */}
+            <div className="flex items-center gap-3 pb-5 border-b border-brand-slate/10">
+              <div className="w-10 h-10 rounded-xl bg-brand-navy/5 text-brand-navy flex items-center justify-center">
+                <Sliders className="w-5 h-5" />
+              </div>
+
+              <div>
+                <h3 className="text-base font-bold text-brand-navy">
+                  Listing Preferences
+                </h3>
+                <p className="text-xs text-brand-slate mt-0.5">
+                  Configure your default listing settings.
+                </p>
+              </div>
+            </div>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                triggerSuccess("Listing preferences saved.");
+              }}
+              className="mt-6 space-y-5"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-xs font-semibold text-brand-navy mb-2">
+                    Default Listing Visibility
+                  </label>
+
+                  <select className="w-full px-3.5 py-3 rounded-xl border border-brand-slate/15 bg-white text-sm text-brand-navy outline-none focus:border-brand-navy transition">
+                    <option>Public</option>
+                    <option>Private</option>
+                    <option>Admin Review Only</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-brand-navy mb-2">
+                    Preferred Contact Channel
+                  </label>
+
+                  <select className="w-full px-3.5 py-3 rounded-xl border border-brand-slate/15 bg-white text-sm text-brand-navy outline-none focus:border-brand-navy transition">
+                    <option>In-App Chat & WhatsApp</option>
+                    <option>In-App Chat Only</option>
+                    <option>Phone / WhatsApp Only</option>
+                  </select>
+                </div>
+              </div>
+
+              {[
+                {
+                  title: "Automatically mark listing as full",
+                  description:
+                    "Automatically update the status when capacity is reached.",
+                },
+                {
+                  title: "Accept student inquiries",
+                  description:
+                    "Allow students to contact you through Maskanny.",
+                },
+              ].map((item) => (
+                <label
+                  key={item.title}
+                  className="flex items-center justify-between gap-5 p-4 rounded-xl border border-brand-slate/10 hover:bg-brand-light/40 transition cursor-pointer"
+                >
                   <div>
                     <p className="text-sm font-semibold text-brand-navy">
-                      Current Session
+                      {item.title}
                     </p>
 
                     <p className="text-xs text-brand-slate mt-1">
-                      Chrome on Windows
+                      {item.description}
                     </p>
                   </div>
 
-                  <span className="px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-600 text-xs font-bold">
-                    Active
-                  </span>
+                  <input
+                    type="checkbox"
+                    defaultChecked
+                    className="w-4 h-4 accent-brand-navy cursor-pointer"
+                  />
+                </label>
+              ))}
+
+              <div className="flex justify-end border-t border-brand-slate/10 pt-5">
+                <button
+                  type="submit"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-navy text-white text-sm font-semibold hover:bg-brand-navy/90 active:scale-[0.98] transition shadow-sm"
+                >
+                  <Check className="w-4 h-4" />
+                  Save Settings
+                </button>
+              </div>
+            </form>
+          </div>
+
+          ) : activeTab === "Settings - Security" ? (
+
+          <div className="bg-white rounded-2xl border border-brand-slate/10 p-6 shadow-sm max-w-4xl mx-auto w-full">
+
+            <div className="flex items-center gap-3 pb-5 border-b border-brand-slate/10">
+              <div className="w-10 h-10 rounded-xl bg-brand-navy/5 text-brand-navy flex items-center justify-center">
+                <Shield className="w-5 h-5" />
+              </div>
+
+              <div>
+                <h3 className="text-base font-bold text-brand-navy">
+                  Security
+                </h3>
+                <p className="text-xs text-brand-slate mt-0.5">
+                  Keep your Maskanny account secure.
+                </p>
+              </div>
+            </div>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+
+                triggerSuccess("Security settings updated.");
+              }}
+              className="mt-6 space-y-5"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-xs font-semibold text-brand-navy mb-2">
+                    Current Password
+                  </label>
+
+                  <input
+                    type="password"
+                    placeholder="••••••••"
+                    className="w-full px-3.5 py-3 rounded-xl border border-brand-slate/15 text-sm outline-none focus:border-brand-navy focus:ring-2 focus:ring-brand-navy/10 transition"
+                  />
                 </div>
 
-                <div className="flex justify-end border-t border-brand-slate/10 pt-5">
-                  <button
-                    type="submit"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-navy text-white text-sm font-semibold hover:bg-brand-navy/90 active:scale-[0.98] transition shadow-sm"
-                  >
-                    <Shield className="w-4 h-4" />
-                    Update Security
-                  </button>
+                <div>
+                  <label className="block text-xs font-semibold text-brand-navy mb-2">
+                    New Password
+                  </label>
+
+                  <input
+                    type="password"
+                    placeholder="••••••••"
+                    className="w-full px-3.5 py-3 rounded-xl border border-brand-slate/15 text-sm outline-none focus:border-brand-navy focus:ring-2 focus:ring-brand-navy/10 transition"
+                  />
                 </div>
-              </form>
-            </div>
+              </div>
+
+              <label className="flex items-center justify-between gap-5 p-4 rounded-xl border border-brand-slate/10 hover:bg-brand-light/40 transition cursor-pointer">
+                <div>
+                  <p className="text-sm font-semibold text-brand-navy">
+                    Two-Factor Authentication
+                  </p>
+
+                  <p className="text-xs text-brand-slate mt-1">
+                    Add an extra layer of security to your account.
+                  </p>
+                </div>
+
+                <input
+                  type="checkbox"
+                  className="w-4 h-4 accent-brand-navy cursor-pointer"
+                />
+              </label>
+
+              <div className="flex items-center justify-between p-4 rounded-xl bg-brand-light/40 border border-brand-slate/10">
+                <div>
+                  <p className="text-sm font-semibold text-brand-navy">
+                    Current Session
+                  </p>
+
+                  <p className="text-xs text-brand-slate mt-1">
+                    Chrome on Windows
+                  </p>
+                </div>
+
+                <span className="px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-600 text-xs font-bold">
+                  Active
+                </span>
+              </div>
+
+              <div className="flex justify-end border-t border-brand-slate/10 pt-5">
+                <button
+                  type="submit"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-navy text-white text-sm font-semibold hover:bg-brand-navy/90 active:scale-[0.98] transition shadow-sm"
+                >
+                  <Shield className="w-4 h-4" />
+                  Update Security
+                </button>
+              </div>
+            </form>
+          </div>
 
           ) : activeTab === "Settings - Appearance" ? (
 
-            <div className="bg-white rounded-2xl border border-brand-slate/10 p-6 shadow-sm max-w-4xl mx-auto w-full">
+          <div className="bg-white rounded-2xl border border-brand-slate/10 p-6 shadow-sm max-w-4xl mx-auto w-full">
 
-              <div className="flex items-center gap-3 pb-5 border-b border-brand-slate/10">
-                <div className="w-10 h-10 rounded-xl bg-brand-navy/5 text-brand-navy flex items-center justify-center">
-                  <Globe className="w-5 h-5" />
+            <div className="flex items-center gap-3 pb-5 border-b border-brand-slate/10">
+              <div className="w-10 h-10 rounded-xl bg-brand-navy/5 text-brand-navy flex items-center justify-center">
+                <Globe className="w-5 h-5" />
+              </div>
+
+              <div>
+                <h3 className="text-base font-bold text-brand-navy">
+                  Appearance
+                </h3>
+
+                <p className="text-xs text-brand-slate mt-0.5">
+                  Customize your dashboard language and theme.
+                </p>
+              </div>
+            </div>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                triggerSuccess("Appearance settings saved.");
+              }}
+              className="mt-6 space-y-5"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-xs font-semibold text-brand-navy mb-2">
+                    Language
+                  </label>
+
+                  <select className="w-full px-3.5 py-3 rounded-xl border border-brand-slate/15 bg-white text-sm text-brand-navy outline-none focus:border-brand-navy transition">
+                    <option>English</option>
+                    <option>العربية</option>
+                  </select>
                 </div>
 
                 <div>
-                  <h3 className="text-base font-bold text-brand-navy">
-                    Appearance
-                  </h3>
+                  <label className="block text-xs font-semibold text-brand-navy mb-2">
+                    Theme
+                  </label>
 
-                  <p className="text-xs text-brand-slate mt-0.5">
-                    Customize your dashboard language and theme.
-                  </p>
+                  <select className="w-full px-3.5 py-3 rounded-xl border border-brand-slate/15 bg-white text-sm text-brand-navy outline-none focus:border-brand-navy transition">
+                    <option>Light Mode</option>
+                    <option>System Default</option>
+                    <option>Dark Mode</option>
+                  </select>
                 </div>
               </div>
 
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  triggerSuccess("Appearance settings saved.");
-                }}
-                className="mt-6 space-y-5"
-              >
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <div>
-                    <label className="block text-xs font-semibold text-brand-navy mb-2">
-                      Language
-                    </label>
-
-                    <select className="w-full px-3.5 py-3 rounded-xl border border-brand-slate/15 bg-white text-sm text-brand-navy outline-none focus:border-brand-navy transition">
-                      <option>English</option>
-                      <option>العربية</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-semibold text-brand-navy mb-2">
-                      Theme
-                    </label>
-
-                    <select className="w-full px-3.5 py-3 rounded-xl border border-brand-slate/15 bg-white text-sm text-brand-navy outline-none focus:border-brand-navy transition">
-                      <option>Light Mode</option>
-                      <option>System Default</option>
-                      <option>Dark Mode</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="flex justify-end border-t border-brand-slate/10 pt-5">
-                  <button
-                    type="submit"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-navy text-white text-sm font-semibold hover:bg-brand-navy/90 active:scale-[0.98] transition shadow-sm"
-                  >
-                    <Check className="w-4 h-4" />
-                    Save Appearance
-                  </button>
-                </div>
-              </form>
-            </div>
+              <div className="flex justify-end border-t border-brand-slate/10 pt-5">
+                <button
+                  type="submit"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-navy text-white text-sm font-semibold hover:bg-brand-navy/90 active:scale-[0.98] transition shadow-sm"
+                >
+                  <Check className="w-4 h-4" />
+                  Save Appearance
+                </button>
+              </div>
+            </form>
+          </div>
 
           ) : activeTab === "Settings - Support" ? (
 
-            <div className="bg-white rounded-2xl border border-brand-slate/10 p-6 shadow-sm max-w-4xl mx-auto w-full">
+          <div className="bg-white rounded-2xl border border-brand-slate/10 p-6 shadow-sm max-w-4xl mx-auto w-full">
 
-              <div className="flex items-center gap-3 pb-5 border-b border-brand-slate/10">
-                <div className="w-10 h-10 rounded-xl bg-brand-navy/5 text-brand-navy flex items-center justify-center">
-                  <HelpCircle className="w-5 h-5" />
-                </div>
-
-                <div>
-                  <h3 className="text-base font-bold text-brand-navy">
-                    Help & Support
-                  </h3>
-
-                  <p className="text-xs text-brand-slate mt-0.5">
-                    Get help with your Maskanny owner account.
-                  </p>
-                </div>
+            <div className="flex items-center gap-3 pb-5 border-b border-brand-slate/10">
+              <div className="w-10 h-10 rounded-xl bg-brand-navy/5 text-brand-navy flex items-center justify-center">
+                <HelpCircle className="w-5 h-5" />
               </div>
 
-              <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-                <button
-                  type="button"
-                  onClick={() => triggerSuccess("Support request created.")}
-                  className="text-left p-5 rounded-xl border border-brand-slate/10 hover:bg-brand-light/40 hover:border-brand-slate/20 active:scale-[0.99] transition"
-                >
-                  <div className="w-9 h-9 rounded-lg bg-brand-navy/5 flex items-center justify-center mb-3">
-                    <HelpCircle className="w-4 h-4 text-brand-navy" />
-                  </div>
+              <div>
+                <h3 className="text-base font-bold text-brand-navy">
+                  Help & Support
+                </h3>
 
-                  <p className="text-sm font-semibold text-brand-navy">
-                    Contact Support
-                  </p>
-
-                  <p className="mt-1.5 text-xs leading-5 text-brand-slate">
-                    Contact the Maskanny support team for help with your account or listings.
-                  </p>
-
-                  <span className="inline-block mt-4 text-xs font-semibold text-brand-navy">
-                    Contact Team →
-                  </span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => triggerSuccess("Bug report form opened.")}
-                  className="text-left p-5 rounded-xl border border-brand-slate/10 hover:bg-brand-light/40 hover:border-brand-slate/20 active:scale-[0.99] transition"
-                >
-                  <div className="w-9 h-9 rounded-lg bg-brand-navy/5 flex items-center justify-center mb-3">
-                    <AlertCircle className="w-4 h-4 text-brand-navy" />
-                  </div>
-
-                  <p className="text-sm font-semibold text-brand-navy">
-                    Report a Problem
-                  </p>
-
-                  <p className="mt-1.5 text-xs leading-5 text-brand-slate">
-                    Report a technical issue or send feedback about the dashboard.
-                  </p>
-
-                  <span className="inline-block mt-4 text-xs font-semibold text-brand-navy">
-                    Report Issue →
-                  </span>
-                </button>
-              </div>
-
-              <div className="mt-5 rounded-xl bg-brand-navy p-5 text-white">
-                <p className="text-sm font-semibold">
-                  Need quick help?
-                </p>
-
-                <p className="mt-1 text-xs leading-5 text-white/70">
-                  Our support team can help with listings, account settings, and owner verification.
+                <p className="text-xs text-brand-slate mt-0.5">
+                  Get help with your Maskanny owner account.
                 </p>
               </div>
             </div>
+
+            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+              <button
+                type="button"
+                onClick={() => triggerSuccess("Support request created.")}
+                className="text-left p-5 rounded-xl border border-brand-slate/10 hover:bg-brand-light/40 hover:border-brand-slate/20 active:scale-[0.99] transition"
+              >
+                <div className="w-9 h-9 rounded-lg bg-brand-navy/5 flex items-center justify-center mb-3">
+                  <HelpCircle className="w-4 h-4 text-brand-navy" />
+                </div>
+
+                <p className="text-sm font-semibold text-brand-navy">
+                  Contact Support
+                </p>
+
+                <p className="mt-1.5 text-xs leading-5 text-brand-slate">
+                  Contact the Maskanny support team for help with your account or listings.
+                </p>
+
+                <span className="inline-block mt-4 text-xs font-semibold text-brand-navy">
+                  Contact Team →
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => triggerSuccess("Bug report form opened.")}
+                className="text-left p-5 rounded-xl border border-brand-slate/10 hover:bg-brand-light/40 hover:border-brand-slate/20 active:scale-[0.99] transition"
+              >
+                <div className="w-9 h-9 rounded-lg bg-brand-navy/5 flex items-center justify-center mb-3">
+                  <AlertCircle className="w-4 h-4 text-brand-navy" />
+                </div>
+
+                <p className="text-sm font-semibold text-brand-navy">
+                  Report a Problem
+                </p>
+
+                <p className="mt-1.5 text-xs leading-5 text-brand-slate">
+                  Report a technical issue or send feedback about the dashboard.
+                </p>
+
+                <span className="inline-block mt-4 text-xs font-semibold text-brand-navy">
+                  Report Issue →
+                </span>
+              </button>
+            </div>
+
+            <div className="mt-5 rounded-xl bg-brand-navy p-5 text-white">
+              <p className="text-sm font-semibold">
+                Need quick help?
+              </p>
+
+              <p className="mt-1 text-xs leading-5 text-white/70">
+                Our support team can help with listings, account settings, and owner verification.
+              </p>
+            </div>
+          </div>
 
           ) : null}
         </div>

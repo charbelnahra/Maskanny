@@ -11,7 +11,9 @@ import { supabase } from "@/src/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { Check, ImagePlus, Trash2 } from "lucide-react";
-import PropertyCreateSelect, { type PropertySelectOption } from "./PropertySelect";
+import PropertyCreateSelect, {
+  type PropertySelectOption,
+} from "./PropertySelect";
 import PropertyLocationPicker from "./PropertyLocationPicker";
 import PropertyUniversitySelect from "./PropertyUniversitySelect";
 import type { University } from "@/src/features/universities/models/university.model";
@@ -22,7 +24,6 @@ import {
   MAX_PROPERTY_IMAGE_FILE_SIZE as MAX_FILE_SIZE,
   PROPERTY_IMAGE_TYPES as IMAGE_TYPES,
 } from "../../validation/media-limits";
-
 
 type PropertyFormPayload = Omit<PropertyCreate, "host_id">;
 
@@ -69,6 +70,7 @@ const INITIAL_VALUES: FormValues = {
 type FieldErrors = Partial<
   Record<keyof FormValues | "location" | "photos" | "universities", string>
 >;
+
 class FormValidationError extends Error {
   constructor(public fields: FieldErrors) {
     super("Check the highlighted fields before submitting.");
@@ -76,20 +78,20 @@ class FormValidationError extends Error {
 }
 
 const GRID_CLASSES =
-  "grid grid-cols-2 gap-x-[24px] gap-y-[26px] [@media(width<=700px)]:grid-cols-1";
+  "grid grid-cols-2 gap-x-6 gap-y-7 [@media(width<=700px)]:grid-cols-1";
 
 const INPUT_CLASSES = `
-  block w-full min-h-[52px] appearance-none
-  rounded-(--radius-sm) border border-transparent
-  bg-(--bg) px-[16px] py-[14px] text-[16px]! text-(--ink)
+  block w-full min-h-[48px] appearance-none
+  rounded-xl border border-[#385F71]/15
+  bg-[#F8F9FB] px-4 py-3 text-[14px]! text-[#2B4162]
   transition-[background,border-color,box-shadow]
-  duration-(--duration-fast) ease-[ease]
-  placeholder:text-(--faint)
-  hover:border-(--line-strong)
-  focus:border-(--ink) focus:bg-(--surface)
-  focus:shadow-[0_0_0_3px_rgba(22,23,26,0.045)]
+  duration-200 ease-in-out
+  placeholder:text-[#8A98A6]
+  hover:border-[#385F71]/40
+  focus:border-[#D7B377] focus:bg-white
+  focus:shadow-[0_0_0_3px_rgba(215,179,119,0.18)]
   focus:outline-none
-  disabled:cursor-not-allowed disabled:opacity-70
+  disabled:cursor-not-allowed disabled:opacity-60
   motion-reduce:transition-none
 `;
 
@@ -98,11 +100,16 @@ function buildPayload(
   location: SelectedLocation | null,
 ): PropertyFormPayload {
   const errors: FieldErrors = {};
-  if (!location || location.address !== values.address.trim())
+
+  if (!location || location.address !== values.address.trim()) {
     errors.location = "Confirm the property location before submitting.";
+  }
+
   const number = (value: string) => (value.trim() ? Number(value) : NaN);
+
   const boolean = (value: string) =>
     ["true", "false"].includes(value) ? value === "true" : undefined;
+
   const result = propertySchema.safeParse({
     property_type: values.propertyType,
     title: values.title.trim(),
@@ -131,19 +138,25 @@ function buildPayload(
       latitude: "location",
       longitude: "location",
     };
+
     for (const issue of result.error.issues) {
       const path = String(issue.path[0]);
       const field = fieldNames[path] ?? (path as keyof FieldErrors);
       errors[field] ??= issue.message;
     }
   }
+
   for (const [field, label] of [
     ["price", "Monthly price"],
     ["bedrooms", "Bedrooms"],
     ["bathrooms", "Bathrooms"],
     ["bedCount", "Beds"],
-  ] as const)
-    if (!values[field].trim()) errors[field] = `${label} is required.`;
+  ] as const) {
+    if (!values[field].trim()) {
+      errors[field] = `${label} is required.`;
+    }
+  }
+
   for (const [field, label] of [
     ["propertyType", "property type"],
     ["gender", "who the property is suitable for"],
@@ -151,21 +164,32 @@ function buildPayload(
     ["electricityIncluded", "an electricity option"],
     ["kitchenType", "a kitchen type"],
     ["bathroomType", "a bathroom type"],
-  ] as const)
-    if (!values[field]) errors[field] = `Select ${label}.`;
-  if (Object.keys(errors).length || !result.success)
+  ] as const) {
+    if (!values[field]) {
+      errors[field] = `Select ${label}.`;
+    }
+  }
+
+  if (Object.keys(errors).length || !result.success) {
     throw new FormValidationError(errors);
+  }
+
   return result.data;
 }
 
 async function readApiError(response: Response): Promise<string> {
   const body: unknown = await response.json().catch(() => null);
+
   if (body && typeof body === "object" && "error" in body) {
     const error = body.error;
+
     if (typeof error === "string") return error;
-    if (Array.isArray(error))
+
+    if (Array.isArray(error)) {
       return error.map((issue) => issue.message).join(" ");
+    }
   }
+
   return `Request failed (${response.status}).`;
 }
 
@@ -183,44 +207,45 @@ function FormSection({
   return (
     <section
       className="
-        border-b border-(--line) bg-(--surface)
-        px-[40px] py-[36px] last-of-type:border-b-0
-        [@media(700px<width<=900px)]:px-[32px]
-        [@media(700px<width<=900px)]:py-[36px]
-        [@media(480px<width<=700px)]:px-[24px]
+        border-b border-[#385F71]/15 bg-white px-10 py-9 last-of-type:border-b-0
+        [@media(700px<width<=900px)]:px-8
+        [@media(700px<width<=900px)]:py-9
+        [@media(480px<width<=700px)]:px-6
         [@media(480px<width<=700px)]:py-[30px]
-        [@media(width<=480px)]:px-[20px]
+        [@media(width<=480px)]:px-5
         [@media(width<=480px)]:py-[26px]
       "
     >
       <div
         className="
-          mb-[26px] flex items-start gap-[16px]
-          [@media(width<=480px)]:mb-[24px]
+          mb-[26px] flex items-start gap-4
+          [@media(width<=480px)]:mb-6
           [@media(width<=480px)]:gap-[14px]
         "
       >
         <span
           aria-hidden="true"
           className="
-            grid size-[38px] flex-none place-items-center
-            rounded-(--radius-full) bg-(--ink)
-            text-[12px] font-semibold text-white
-            [@media(width<=480px)]:size-[34px]
+            grid size-10 flex-none place-items-center
+            rounded-full border border-[#D7B377]/50
+            bg-[#2B4162] text-[13px] font-semibold text-[#D7B377]
+            [@media(width<=480px)]:size-9
           "
         >
           {number}
         </span>
 
-        <div>
-          <h2 className="m-0 text-[24px] leading-[1.25] font-medium tracking-[-0.025em] max-[480px]:text-[22px]">
+        <div className="min-w-0">
+          <h2 className="m-0 text-[24px] leading-[1.25] font-semibold tracking-[-0.035em] text-[#2B4162] max-[480px]:text-[21px]">
             {title}
           </h2>
-          <p className="mt-[7px] mb-0 text-[13px] leading-[1.55] text-(--soft)">
+
+          <p className="mt-[7px] mb-0 text-[14px] leading-relaxed text-[#6F7F8D]">
             {description}
           </p>
+
           {number === "01" && (
-            <p className="mt-2 text-[12px] leading-5 text-(--soft)">
+            <p className="mt-2 text-[12px] leading-5 text-[#7B8996]">
               All fields are required unless marked optional.
             </p>
           )}
@@ -269,7 +294,13 @@ function FormField({
     [hint && `${id}-hint`, errors[id] && `${id}-error`]
       .filter(Boolean)
       .join(" ") || undefined;
-  const inputClasses = `${INPUT_CLASSES} ${errors[id] ? "border-(--danger)! bg-(--danger-bg)!" : ""}`;
+
+  const inputClasses = `${INPUT_CLASSES} ${
+    errors[id]
+      ? "border-(--danger)! bg-(--danger-bg)!"
+      : ""
+  }`;
+
   const fieldProps = {
     id,
     value,
@@ -290,7 +321,7 @@ function FormField({
       <label
         id={`${id}-label`}
         htmlFor={id}
-        className="mt-0! mb-[9px]! block text-[14px]! font-medium! text-(--ink-2)!"
+        className="mt-0! mb-[9px]! block text-[14px]! font-semibold! text-[#2B4162]!"
       >
         {label}
       </label>
@@ -327,11 +358,12 @@ function FormField({
       {hint && (
         <p
           id={`${id}-hint`}
-          className="mt-2 text-[12px] leading-5 text-(--soft)"
+          className="mt-2 text-[12px] leading-5 text-[#7B8996]"
         >
           {hint}
         </p>
       )}
+
       {errors[id] && (
         <p
           id={`${id}-error`}
@@ -343,6 +375,7 @@ function FormField({
     </div>
   );
 }
+
 /* eslint-disable @next/next/no-img-element -- Local file preview uses a browser blob URL. */
 function PhotoPreview({
   photo,
@@ -372,29 +405,42 @@ function PhotoPreview({
   }, [photo]);
 
   return (
-    <figure className="m-0 min-w-0 overflow-hidden rounded-(--radius-sm) border border-(--line-strong) bg-(--surface)">
-      <div className="relative aspect-[4/3] bg-(--placeholder-bg)">
+    <figure className="m-0 min-w-0 overflow-hidden rounded-xl border border-[#385F71]/15 bg-white shadow-[0_4px_18px_-14px_rgba(43,65,98,0.3)]">
+      <div className="relative aspect-[4/3] bg-[#E9EEF2]">
         <img
           ref={imageRef}
           alt={`Property preview ${index + 1}`}
           className="block h-full w-full object-cover"
         />
+
         {index === 0 && (
-          <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 rounded-(--radius-full) bg-(--surface) px-3 py-2 text-[12px] font-semibold text-(--ink)">
-            <Check aria-hidden="true" size={14} />
+          <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 rounded-full border border-[#D7B377]/50 bg-[#2B4162] px-3 py-2 text-[12px] font-semibold text-white shadow-sm">
+            <Check
+              aria-hidden="true"
+              size={14}
+              className="text-[#D7B377]"
+            />
             Cover photo
           </span>
         )}
       </div>
+
       <figcaption className="p-3">
         <p
           title={photo.name}
-          className="truncate text-[13px] font-medium text-(--ink)"
+          className="truncate text-[13px] font-semibold text-[#2B4162]"
         >
           {photo.name}
         </p>
+
         <p
-          className={`mt-1 text-[12px] leading-5 ${status === "failed" ? "text-(--danger)" : status === "uploaded" ? "text-(--success)" : "text-(--soft)"}`}
+          className={`mt-1 text-[12px] leading-5 ${
+            status === "failed"
+              ? "text-(--danger)"
+              : status === "uploaded"
+                ? "text-(--success)"
+                : "text-[#6F7F8D]"
+          }`}
         >
           {status === "uploaded"
             ? "Uploaded"
@@ -404,6 +450,7 @@ function PhotoPreview({
                 ? "Upload failed · retry below"
                 : "Ready to upload"}
         </p>
+
         <div className="mt-2 flex min-h-[44px] items-center justify-between gap-2">
           {index > 0 ? (
             <button
@@ -411,13 +458,16 @@ function PhotoPreview({
               onClick={onCover}
               disabled={disabled}
               aria-label={`Make cover: ${photo.name}`}
-              className="min-h-[44px] rounded-(--radius-full) border border-(--line-strong) px-3 text-[12px]! font-medium! text-(--ink) hover:border-(--ink) focus-visible:outline-2 focus-visible:outline-(--ink) focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="min-h-[44px] rounded-full border border-[#385F71]/20 px-3 text-[12px]! font-medium! text-[#2B4162] transition-colors hover:border-[#D7B377] hover:bg-[#E9EEF2] focus-visible:outline-2 focus-visible:outline-[#D7B377] focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
               Make cover
             </button>
           ) : (
-            <span className="text-[12px] text-(--soft)">Shown first</span>
+            <span className="text-[12px] text-[#6F7F8D]">
+              Shown first
+            </span>
           )}
+
           <button
             type="button"
             onClick={onRemove}
@@ -425,10 +475,11 @@ function PhotoPreview({
             aria-label={`Remove ${photo.name}`}
             className="
               grid size-[44px] shrink-0 cursor-pointer place-items-center
-              rounded-(--radius-full) border border-(--line-strong) bg-(--surface) p-0
-              text-(--soft) hover:border-(--danger) hover:bg-(--danger-bg) hover:text-(--danger)
+              rounded-full border border-[#385F71]/20 bg-white p-0
+              text-[#6F7F8D] transition-colors
+              hover:border-(--danger) hover:bg-(--danger-bg) hover:text-(--danger)
               focus-visible:outline-2 focus-visible:outline-solid
-              focus-visible:outline-(--ink) focus-visible:outline-offset-[3px]
+              focus-visible:outline-[#D7B377] focus-visible:outline-offset-[3px]
               disabled:cursor-not-allowed disabled:opacity-50
             "
           >
@@ -440,12 +491,14 @@ function PhotoPreview({
   );
 }
 /* eslint-enable @next/next/no-img-element */
+
 export default function PropertyForm({
   searchEnabled = false,
 }: {
   searchEnabled?: boolean;
 }) {
   const router = useRouter();
+
   const [values, setValues] = useState<FormValues>(INITIAL_VALUES);
   const [selectedLocation, setSelectedLocation] =
     useState<SelectedLocation | null>(null);
@@ -466,6 +519,7 @@ export default function PropertyForm({
   const [activePhotoIndex, setActivePhotoIndex] = useState<number | null>(null);
   const [failedPhotoIndex, setFailedPhotoIndex] = useState<number | null>(null);
   const [photoAnnouncement, setPhotoAnnouncement] = useState("");
+
   const submitting = useRef(false);
   const requestId = useRef<string | null>(null);
   const photoRequestIds = useRef(new WeakMap<File, string>());
@@ -475,17 +529,23 @@ export default function PropertyForm({
 
   useEffect(() => {
     if (!creationStarted || isComplete) return;
+
     const warnBeforeLeaving = (event: BeforeUnloadEvent) => {
       event.preventDefault();
     };
+
     window.addEventListener("beforeunload", warnBeforeLeaving);
+
     return () => window.removeEventListener("beforeunload", warnBeforeLeaving);
   }, [creationStarted, isComplete]);
 
   function updateField(id: keyof FormValues, value: string) {
     setValues((current) => ({ ...current, [id]: value }));
+
     if (id === "address") setSelectedLocation(null);
+
     setFeedback(null);
+
     setErrors((current) => ({
       ...current,
       [id]: undefined,
@@ -519,65 +579,88 @@ export default function PropertyForm({
       setFeedback(null);
       setErrors((current) => ({ ...current, photos: undefined }));
     }
+
     setFeedback(null);
     event.target.value = "";
   }
 
   function removePhoto(index: number) {
     setPhotoAnnouncement(`${photos[index].name} removed.`);
+
     setPhotos((current) =>
       current.filter((_, photoIndex) => photoIndex !== index),
     );
+
     setFeedback(null);
     setErrors((current) => ({ ...current, photos: undefined }));
+
     document.getElementById("propertyPhotos")?.focus();
   }
 
   function makeCover(index: number) {
     setPhotoAnnouncement(`${photos[index].name} is now the cover photo.`);
+
     setPhotos((current) => [
       current[index],
       ...current.filter((_, itemIndex) => itemIndex !== index),
     ]);
+
     document.getElementById("propertyPhotos")?.focus();
   }
 
   function confirmLocation() {
     if (!draftLocation || !values.address.trim()) return;
-    setSelectedLocation({ address: values.address.trim(), ...draftLocation });
+
+    setSelectedLocation({
+      address: values.address.trim(),
+      ...draftLocation,
+    });
+
     setErrors((current) => ({ ...current, location: undefined }));
     setFeedback(null);
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
     if (submitting.current || isComplete) return;
 
     let payload: PropertyFormPayload | null = null;
+
     if (!createdPropertyId) {
       try {
         let validationErrors: FieldErrors = {};
+
         try {
           payload = buildPayload(values, selectedLocation);
         } catch (error) {
-          if (error instanceof FormValidationError)
+          if (error instanceof FormValidationError) {
             validationErrors = error.fields;
-          else throw error;
+          } else {
+            throw error;
+          }
         }
-        if (photos.length === 0)
+
+        if (photos.length === 0) {
           validationErrors.photos = "Add at least one property photo.";
+        }
+
         if (
           !propertyUniversitiesSchema.safeParse({
             university_ids: universities.map((u) => u.university_id),
           }).success
-        )
+        ) {
           validationErrors.universities =
             "Choose valid universities without duplicates.";
-        if (Object.keys(validationErrors).length)
+        }
+
+        if (Object.keys(validationErrors).length) {
           throw new FormValidationError(validationErrors);
+        }
       } catch (error) {
         if (error instanceof FormValidationError) {
           setErrors(error.fields);
+
           const firstField = (
             [
               "title",
@@ -598,6 +681,7 @@ export default function PropertyForm({
               "photos",
             ] as const
           ).find((field) => error.fields[field])!;
+
           document
             .getElementById(
               firstField === "photos"
@@ -610,12 +694,14 @@ export default function PropertyForm({
             )
             ?.focus();
         }
+
         setFeedback({
           message:
             error instanceof Error
               ? error.message
               : "Check the property details.",
         });
+
         return;
       }
     }
@@ -625,26 +711,31 @@ export default function PropertyForm({
     setFailedPhotoIndex(null);
     setSubmissionMessage("Checking your Host session…");
     setFeedback(null);
+
     let uploadingPhotoIndex: number | null = null;
+
     try {
       const {
         data: { session },
         error: sessionError,
       } = await supabase.auth.getSession();
+
       if (sessionError || !session?.access_token) {
         throw new Error("Sign in as a Host before creating a listing.");
       }
 
       const headers = { Authorization: `Bearer ${session.access_token}` };
+
       let propertyId = createdPropertyId;
 
       if (!propertyId && payload) {
-        // An earlier attempt may have committed despite a lost response. An
-        // auth/validation rejection on a retry cannot prove that it did not.
         const retryingCreation = requestId.current !== null;
+
         requestId.current ??= crypto.randomUUID();
+
         setCreationStarted(true);
         setSubmissionMessage("Saving property details…");
+
         const response = await fetch("/api/properties", {
           method: "POST",
           headers: {
@@ -654,15 +745,18 @@ export default function PropertyForm({
           },
           body: JSON.stringify(payload),
         });
+
         if (!response.ok) {
           if (!retryingCreation && [400, 401, 403].includes(response.status)) {
             setCreationStarted(false);
             requestId.current = null;
           }
+
           throw new Error(await readApiError(response));
         }
 
         const created: unknown = await response.json();
+
         if (
           !created ||
           typeof created !== "object" ||
@@ -674,29 +768,41 @@ export default function PropertyForm({
             "The server response did not include a property ID. Retry this submission to safely confirm whether it was saved.",
           );
         }
+
         propertyId = created.property_id;
         setCreatedPropertyId(propertyId);
       }
 
-      if (!propertyId) throw new Error("The property could not be created.");
+      if (!propertyId) {
+        throw new Error("The property could not be created.");
+      }
 
       if (!universitiesSaved && universities.length) {
         setSubmissionMessage("Saving selected universities…");
+
         try {
           const response = await fetch(
             `/api/properties/${propertyId}/universities`,
             {
               method: "POST",
-              headers: { ...headers, "Content-Type": "application/json" },
+              headers: {
+                ...headers,
+                "Content-Type": "application/json",
+              },
               body: JSON.stringify({
                 university_ids: universities.map((u) => u.university_id),
               }),
             },
           );
-          if (!response.ok) throw new Error(await readApiError(response));
+
+          if (!response.ok) {
+            throw new Error(await readApiError(response));
+          }
+
           const acknowledgement = propertyUniversitiesSchema.safeParse(
             await response.json(),
           );
+
           if (
             !acknowledgement.success ||
             acknowledgement.data.university_ids.length !==
@@ -705,31 +811,55 @@ export default function PropertyForm({
               (u) =>
                 !acknowledgement.data.university_ids.includes(u.university_id),
             )
-          )
+          ) {
             throw new Error(
               "The server did not confirm all selected universities.",
             );
+          }
+
           setUniversitiesSaved(true);
-          setErrors((current) => ({ ...current, universities: undefined }));
+          setErrors((current) => ({
+            ...current,
+            universities: undefined,
+          }));
         } catch (error) {
-          const message = `Property saved, but selected universities could not be confirmed: ${error instanceof Error ? error.message : "Check your connection."} Retry to finish this submission.`;
-          setErrors((current) => ({ ...current, universities: message }));
+          const message = `Property saved, but selected universities could not be confirmed: ${
+            error instanceof Error
+              ? error.message
+              : "Check your connection."
+          } Retry to finish this submission.`;
+
+          setErrors((current) => ({
+            ...current,
+            universities: message,
+          }));
+
           throw new Error(message);
         }
       }
 
-      for (let index = uploadedPhotoCount; index < photos.length; index += 1) {
+      for (
+        let index = uploadedPhotoCount;
+        index < photos.length;
+        index += 1
+      ) {
         uploadingPhotoIndex = index;
+
         setActivePhotoIndex(index);
         setSubmissionMessage(
           `Uploading photo ${index + 1} of ${photos.length}…`,
         );
+
         const formData = new FormData();
         formData.append("file", photos[index]);
         formData.append("sort_order", String(index));
+
         const photo = photos[index];
-        if (!photoRequestIds.current.has(photo))
+
+        if (!photoRequestIds.current.has(photo)) {
           photoRequestIds.current.set(photo, crypto.randomUUID());
+        }
+
         const response = await fetch(`/api/properties/${propertyId}/media`, {
           method: "POST",
           headers: {
@@ -742,21 +872,27 @@ export default function PropertyForm({
             `Property saved, but photo ${index + 1} could not be uploaded. Check your connection and retry the remaining photos.`,
           );
         });
+
         if (!response.ok) {
           throw new Error(
             `Property saved, but photo ${index + 1} failed: ${await readApiError(response)} Retry to upload the remaining photos.`,
           );
         }
+
         setUploadedPhotoCount(index + 1);
       }
 
       uploadingPhotoIndex = null;
+
       setIsComplete(true);
       setSubmissionMessage("All photos uploaded. Opening confirmation…");
+
       router.replace("/properties/create/confirmation");
     } catch (error) {
-      if (uploadingPhotoIndex !== null)
+      if (uploadingPhotoIndex !== null) {
         setFailedPhotoIndex(uploadingPhotoIndex);
+      }
+
       setFeedback({
         message:
           error instanceof Error
@@ -770,7 +906,11 @@ export default function PropertyForm({
     }
   }
 
-  const fieldProps = { onChange: updateField, disabled: fieldsLocked, errors };
+  const fieldProps = {
+    onChange: updateField,
+    disabled: fieldsLocked,
+    errors,
+  };
 
   return (
     <form
@@ -779,8 +919,8 @@ export default function PropertyForm({
       aria-busy={isSubmitting}
       className="
         mx-auto my-0 w-full max-w-[1040px] overflow-hidden
-        rounded-(--radius-xl) border border-(--line) bg-(--surface)
-        shadow-[0_1px_2px_rgba(22,23,26,0.02),0_24px_70px_-45px_rgba(22,23,26,0.3)]
+        rounded-2xl border border-[#385F71]/15 bg-white
+        shadow-[0_2px_8px_rgba(43,65,98,0.03),0_24px_70px_-45px_rgba(43,65,98,0.3)]
         [@media(width<=700px)]:rounded-[24px]
       "
     >
@@ -797,6 +937,7 @@ export default function PropertyForm({
             value={values.title}
             placeholder="e.g. Hamra Student Residence"
           />
+
           <FormField
             {...fieldProps}
             id="propertyType"
@@ -809,6 +950,7 @@ export default function PropertyForm({
               { value: "apartment", label: "Apartment" },
             ]}
           />
+
           <FormField
             {...fieldProps}
             id="description"
@@ -838,6 +980,7 @@ export default function PropertyForm({
             fullWidth
           />
         </div>
+
         <PropertyLocationPicker
           address={values.address}
           position={draftLocation}
@@ -854,13 +997,19 @@ export default function PropertyForm({
           onAddress={(address) => updateField("address", address)}
           onUnconfirm={() => setSelectedLocation(null)}
         />
+
         <PropertyUniversitySelect
           selected={universities}
           disabled={fieldsLocked}
           error={errors.universities}
           onChange={(selected) => {
             setUniversities(selected);
-            setErrors((current) => ({ ...current, universities: undefined }));
+
+            setErrors((current) => ({
+              ...current,
+              universities: undefined,
+            }));
+
             setFeedback(null);
           }}
         />
@@ -883,6 +1032,7 @@ export default function PropertyForm({
             placeholder="e.g. 250"
             hint="Enter the monthly rent in US dollars."
           />
+
           <FormField
             {...fieldProps}
             id="bedrooms"
@@ -892,6 +1042,7 @@ export default function PropertyForm({
             step="1"
             placeholder="e.g. 2"
           />
+
           <FormField
             {...fieldProps}
             id="bathrooms"
@@ -901,6 +1052,7 @@ export default function PropertyForm({
             step="1"
             placeholder="e.g. 1"
           />
+
           <FormField
             {...fieldProps}
             id="bedCount"
@@ -930,6 +1082,7 @@ export default function PropertyForm({
               { value: "false", label: "No" },
             ]}
           />
+
           <FormField
             {...fieldProps}
             id="electricityIncluded"
@@ -942,6 +1095,7 @@ export default function PropertyForm({
               { value: "false", label: "No" },
             ]}
           />
+
           <FormField
             {...fieldProps}
             id="kitchenType"
@@ -953,6 +1107,7 @@ export default function PropertyForm({
               { value: "shared", label: "Shared" },
             ]}
           />
+
           <FormField
             {...fieldProps}
             id="bathroomType"
@@ -964,6 +1119,7 @@ export default function PropertyForm({
               { value: "shared", label: "Shared" },
             ]}
           />
+
           <FormField
             {...fieldProps}
             id="gender"
@@ -984,7 +1140,7 @@ export default function PropertyForm({
         title="Property photos"
         description="Add at least one photo. Choose the cover students will see first."
       >
-        <div className="mt-[28px] w-full">
+        <div className="mt-7 w-full">
           <input
             id="propertyPhotos"
             className="peer sr-only"
@@ -1003,29 +1159,27 @@ export default function PropertyForm({
             htmlFor="propertyPhotos"
             className={`
               group m-0! flex! min-h-[180px] w-full cursor-pointer
-              flex-col items-center justify-center gap-[8px]
-              rounded-(--radius-sm) border border-dashed
-              border-(--line-strong) bg-(--bg)
-              px-[24px] py-[28px] text-center
-              transition-colors motion-reduce:transition-none
-              duration-[200ms] ease-[ease]
-              hover:border-(--ink) hover:bg-(--chip)
+              flex-col items-center justify-center gap-2
+              rounded-xl border border-dashed border-[#385F71]/25
+              bg-[#F8F9FB] px-6 py-7 text-center
+              transition-colors duration-200 ease-in-out
+              hover:border-[#D7B377] hover:bg-[#F5F0F6]
               peer-focus-visible:outline-2 peer-focus-visible:outline-solid
-              peer-focus-visible:outline-(--ink)
+              peer-focus-visible:outline-[#D7B377]
               peer-focus-visible:outline-offset-[3px]
               [@media(width<=480px)]:px-[18px]
-              [@media(width<=480px)]:py-[28px]
+              [@media(width<=480px)]:py-7
               ${fieldsLocked ? "cursor-not-allowed! opacity-60" : ""}
             `}
           >
             <span
               aria-hidden="true"
-              className="mb-1 grid size-[44px] place-items-center rounded-(--radius-full) bg-(--chip) text-(--ink)"
+              className="mb-1 grid size-[46px] place-items-center rounded-full border border-[#D7B377]/40 bg-[#E9EEF2] text-[#2B4162]"
             >
               <ImagePlus size={21} />
             </span>
 
-            <span className="block text-[16px] font-semibold tracking-[-0.01em] text-(--ink)">
+            <span className="block text-[16px] font-semibold tracking-[-0.01em] text-[#2B4162]">
               {fieldsLocked
                 ? "Photo selection locked"
                 : photos.length > 0
@@ -1033,18 +1187,18 @@ export default function PropertyForm({
                   : "Add property photos"}
             </span>
 
-            <span className="block text-[13px] leading-[1.5] text-(--soft)">
+            <span className="block text-[13px] leading-relaxed text-[#6F7F8D]">
               JPG, PNG or WEBP · up to 5 MB each
             </span>
 
             <span
               className="
-                mt-[10px] inline-flex items-center justify-center
-                rounded-[999px] border border-[rgba(22,23,26,0.12)]
-                min-h-[44px] bg-(--surface) px-[18px] py-[10px]
-                text-[13px] font-medium text-(--ink)
-                transition-[border-color,background] duration-[200ms] ease-[ease]
-                group-hover:border-(--ink)
+                mt-[10px] inline-flex min-h-[44px] items-center justify-center
+                rounded-full border border-[#385F71]/20
+                bg-white px-5 py-2 text-[14px] font-semibold text-[#2B4162]
+                transition-colors duration-200
+                group-hover:border-[#D7B377] group-hover:bg-[#2B4162]
+                group-hover:text-white
               "
             >
               {fieldsLocked ? "Finish the uploads below" : "Choose photos"}
@@ -1052,8 +1206,11 @@ export default function PropertyForm({
           </label>
         </div>
 
-        <div className="mt-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 text-[12px] leading-5 text-(--soft)">
-          <p id="photos-help">Add 1–6 photos. The cover photo appears first.</p>
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 text-[12px] leading-5 text-[#6F7F8D]">
+          <p id="photos-help">
+            Add 1–6 photos. The cover photo appears first.
+          </p>
+
           <p role="status" aria-live="polite" aria-atomic="true">
             {photos.length} of {MAX_IMAGES} photos selected
           </p>
@@ -1088,9 +1245,11 @@ export default function PropertyForm({
             ))}
           </div>
         )}
+
         <p role="status" aria-live="polite" className="sr-only">
           {photoAnnouncement}
         </p>
+
         {errors.photos && (
           <p
             id="photos-error"
@@ -1100,8 +1259,9 @@ export default function PropertyForm({
             {errors.photos}
           </p>
         )}
+
         {createdPropertyId && !isSubmitting && !isComplete && (
-          <p role="status" className="mt-3 text-[13px] text-(--soft)">
+          <p role="status" className="mt-3 text-[13px] text-[#6F7F8D]">
             Property details are saved. {uploadedPhotoCount} of {photos.length}{" "}
             photos uploaded. Keep this page open and retry to finish your
             submission.
@@ -1113,14 +1273,14 @@ export default function PropertyForm({
         <div
           role="alert"
           className="
-            mx-[40px] mt-[24px] mb-[24px] flex items-start gap-[12px]
-            rounded-[14px] border px-[18px] py-[16px]
-            text-[13px] leading-[1.5]
-            [@media(480px<width<=700px)]:mx-[24px]
-            [@media(480px<width<=700px)]:mt-[20px]
-            [@media(width<=480px)]:mx-[20px]
+            mx-10 mt-6 mb-6 flex items-start gap-3
+            rounded-xl border border-[rgba(138,59,50,0.18)]
+            bg-(--danger-bg) px-[18px] py-4
+            text-[13px] leading-relaxed text-(--danger)
+            [@media(480px<width<=700px)]:mx-6
+            [@media(480px<width<=700px)]:mt-5
+            [@media(width<=480px)]:mx-5
             [@media(width<=480px)]:mt-[18px]
-            border-[rgba(138,59,50,0.12)] bg-(--danger-bg) text-(--danger)
           "
         >
           <span
@@ -1129,8 +1289,10 @@ export default function PropertyForm({
           >
             !
           </span>
+
           <div className="space-y-2">
             <p className="m-0">{feedback.message}</p>
+
             {creationStarted && !createdPropertyId && (
               <p>
                 Retry this submission to safely check whether the property was
@@ -1143,43 +1305,47 @@ export default function PropertyForm({
 
       <div
         className="
-          flex items-center justify-between gap-[24px]
-          border-t border-(--line) bg-(--bg) px-[40px] py-[30px]
+          flex items-center justify-between gap-6
+          border-t border-[#385F71]/15 bg-[#F8F9FB] px-10 py-[30px]
           [@media(width<=700px)]:flex-col
           [@media(width<=700px)]:items-stretch
-          [@media(480px<width<=700px)]:px-[24px]
+          [@media(480px<width<=700px)]:px-6
           [@media(480px<width<=700px)]:py-[26px]
-          [@media(width<=480px)]:px-[20px]
-          [@media(width<=480px)]:py-[24px]
+          [@media(width<=480px)]:px-5
+          [@media(width<=480px)]:py-6
         "
       >
         <div>
-          <p className="text-[15px] font-medium text-(--ink)">
+          <p className="text-[15px] font-semibold text-[#2B4162]">
             Ready to submit for review?
           </p>
-          <p className="text-[13px] leading-[1.5] text-(--soft)">
+
+          <p className="text-[14px] leading-relaxed text-[#6F7F8D]">
             Your listing needs Admin approval and an active, paid boost before
             it is published.
           </p>
+
           {(isSubmitting || isComplete) && (
             <div className="mt-4 space-y-2">
               <p
                 role="status"
                 aria-live="polite"
                 aria-atomic="true"
-                className="text-[13px] font-medium text-(--ink)"
+                className="text-[13px] font-medium text-[#2B4162]"
               >
                 {submissionMessage}
               </p>
+
               {createdPropertyId && (
                 <progress
                   aria-label="Photo upload progress"
-                  className="block h-1.5 w-full max-w-[320px] accent-(--ink)"
+                  className="block h-1.5 w-full max-w-[320px] accent-[#2B4162]"
                   max={photos.length}
                   value={uploadedPhotoCount}
                 />
               )}
-              <p className="text-[12px] text-(--soft)">
+
+              <p className="text-[12px] text-[#6F7F8D]">
                 Keep this page open until all photos are uploaded.
               </p>
             </div>
@@ -1191,17 +1357,17 @@ export default function PropertyForm({
           disabled={isSubmitting || isComplete}
           className="
             inline-flex min-h-[52px] min-w-[190px] shrink-0 cursor-pointer
-            items-center justify-center gap-[12px]
-            rounded-(--radius-full) [border:0]
-            bg-(--ink) px-[22px] py-[14px]
-            text-[14px]! font-medium! whitespace-nowrap text-white
-            transition-colors
-            duration-(--duration-fast) ease-[ease]
-            hover:bg-(--btn-bg-hover)
+            items-center justify-center gap-3
+            rounded-full border border-[#D7B377]/60
+            bg-[#2B4162] px-[22px] py-[14px]
+            text-[14px]! font-semibold! whitespace-nowrap text-white
+            shadow-sm transition-[background,border-color,box-shadow]
+            duration-200 ease-in-out
+            hover:border-[#D7B377] hover:bg-[#385F71] hover:shadow-md
             focus-visible:outline-2 focus-visible:outline-solid
-            focus-visible:outline-(--ink) focus-visible:outline-offset-[3px]
+            focus-visible:outline-[#D7B377] focus-visible:outline-offset-[3px]
             [@media(width<=700px)]:w-full
-            motion-reduce:transition-none motion-reduce:transform-none
+            motion-reduce:transition-none
             disabled:cursor-not-allowed disabled:opacity-50
           "
         >
@@ -1220,7 +1386,10 @@ export default function PropertyForm({
                 : creationStarted
                   ? "Retry submission"
                   : "Submit for review"}
-          <span aria-hidden="true">→</span>
+
+          <span aria-hidden="true" className="text-[#D7B377]">
+            →
+          </span>
         </button>
       </div>
     </form>

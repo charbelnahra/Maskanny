@@ -87,8 +87,19 @@ export function useFavorites() {
       return;
     }
 
-    if (wasSaved) toast.success("Removed from favorites", { id: toastId });
-    else toast.success("Added to favorites", { id: toastId });
+    if (wasSaved) {
+  toast.success("Removed from favorites", {
+    id: toastId,
+    className: "font-sans !bg-[#2B4162] !text-white !border-[#385F71]",
+    closeButton: false,
+  });
+} else {
+  toast.success("Added to favorites", {
+    id: toastId,
+    className: "font-sans !bg-[#2B4162] !text-white !border-[#385F71]",
+    closeButton: false,
+  });
+}
   }, []);
 
   const isSaved = useCallback((id: string) => saved.includes(id), [saved]);

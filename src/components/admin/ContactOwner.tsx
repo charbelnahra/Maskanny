@@ -128,7 +128,7 @@ export default function ContactOwnerButton({ owner, listingId }: ContactOwnerBut
                         href={`https://wa.me/${whatsAppNumber}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-700 transition-all shadow-2xs"
+                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-[11px] font-semibold !text-white bg-emerald-600 hover:bg-emerald-700 hover:!text-white transition-all duration-200 shadow-2xs cursor-pointer"
                       >
                         <MessageSquare className="w-3.5 h-3.5" />
                         <span>WhatsApp</span>
@@ -136,7 +136,7 @@ export default function ContactOwnerButton({ owner, listingId }: ContactOwnerBut
 
                       <a
                         href={`tel:${owner.phone}`}
-                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-brand-navy hover:bg-brand-navy/90 transition-all shadow-2xs"
+                       className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-[11px] font-semibold !text-white bg-brand-navy hover:bg-brand-slate hover:!text-white transition-all duration-200 shadow-2xs cursor-pointer"
                       >
                         <Phone className="w-3.5 h-3.5" />
                         <span>Call</span>
@@ -180,7 +180,7 @@ export default function ContactOwnerButton({ owner, listingId }: ContactOwnerBut
                      
                       <a
                         href={`mailto:${owner.email}`}
-                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-brand-navy hover:bg-brand-navy/90 transition-all shadow-2xs"
+                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-[11px] font-semibold !text-white bg-brand-navy hover:bg-brand-slate hover:!text-white transition-all duration-200 shadow-2xs cursor-pointer"
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
                         <span>Email Client</span>
