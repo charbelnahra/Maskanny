@@ -11,7 +11,7 @@ import { usePropertyListings } from "./usePropertyListings";
 
 const filterKeys = ["university_id", "query", "property_type", "min_price", "max_price", "bedrooms", "bathrooms", "furnished", "electricity_included", "gender"];
 const focusClass = "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--ink)]";
-const stateButtonClass = `mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[var(--btn-bg)] px-6 text-sm font-semibold text-[var(--btn-ink)] transition-colors hover:bg-[var(--btn-bg-hover)] motion-reduce:transition-none ${focusClass}`;
+const stateButtonClass = `mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#2B4162] px-6 text-sm font-semibold text-white transition-colors hover:bg-[#385F71] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#D7B377] motion-reduce:transition-none`;
 
 export function ListingsBrowser({ searchParams }: { searchParams: Record<string, string | string[] | undefined> }) {
   const router = useRouter();
@@ -56,13 +56,29 @@ export function ListingsBrowser({ searchParams }: { searchParams: Record<string,
   };
 
   return (
-    <main className="student-marketplace min-h-screen bg-[var(--bg)] text-[var(--ink)]">
+    <main className="student-marketplace min-h-screen bg-[#F8F8FA] text-[#2B4162]">
       <div className="mx-auto w-[calc(100%-48px)] max-w-[1184px] pt-[42px] pb-20 max-md:w-[calc(100%-32px)] max-md:pt-8 max-md:pb-14">
-        <div className="mb-6 sm:mb-4 md:mb-6">
-          <span className="mb-3 inline-flex items-center gap-2 text-[11px] sm:mb-2 font-semibold uppercase tracking-[0.18em] text-[var(--ink-2)]"><span className="size-1.5 rounded-full bg-[var(--success)]" aria-hidden="true" /> Student housing, made simpler</span>
-          <h1 className="m-0 max-w-[780px] text-[clamp(32px,4vw,49px)] font-medium leading-[1.04] tracking-[-0.045em] text-balance">A place to settle in.<br /><span className="text-[var(--success)]">A space to make your own.</span></h1>
-          <p className="mt-4 max-w-[560px] text-[15px] leading-relaxed text-[var(--soft)] sm:mt-3 md:text-base">Explore student housing, compare monthly prices and find a place that fits your everyday life.</p>
+
+        <div className="mb-8 md:mb-10">
+          <span className="mb-3 inline-flex items-center gap-2 rounded-full border border-[#385F71]/15 bg-[#E9EEF2] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#2B4162]">
+            <span className="size-1.5 rounded-full bg-[#D7B377]" aria-hidden="true" />
+            Student housing, made simpler
+          </span>
+
+          <h1 className="m-0 max-w-[780px] text-[clamp(32px,4vw,40px)] font-semibold leading-[1.08] tracking-[-0.045em] text-[#2B4162] text-balance">
+            A place to settle in.
+            <br />
+            <span className="text-[#385F71]">
+              A space to make your own.
+            </span>
+          </h1>
+
+          <p className="mt-4 max-w-[560px] text-[15px] leading-relaxed text-[#6F7F8D] md:text-base">
+            Explore student homes, compare monthly prices, and find a place
+            that feels right for your university life.
+          </p>
         </div>
+
         {values.university_id && (
           <div aria-label="Selected university" className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-[var(--radius-sm)] border border-[var(--success)]/15 bg-[var(--success-bg)] p-4 sm:px-5">
             <div className="flex min-w-0 flex-[1_1_100%] items-start gap-3 sm:flex-1">
@@ -86,12 +102,41 @@ export function ListingsBrowser({ searchParams }: { searchParams: Record<string,
           onClear={clearFilters}
         />
         <section aria-labelledby="property-results-title" aria-busy={status === "loading"}>
-          <div className="mb-6 flex flex-wrap items-end justify-between gap-3 border-b border-[var(--line-strong)] pb-5">
+          <div className="mb-6 flex flex-wrap items-end justify-between gap-3 border-b border-[#385F71]/15 pb-5">
             <div>
-              <h2 id="property-results-title" className="m-0 text-2xl font-medium tracking-[-0.03em]">{queryString ? "Your search results" : "Explore student homes"}</h2>
-              <p role="status" aria-live="polite" aria-atomic="true" className="mt-1.5 text-[13px] text-[var(--soft)]">{status === "ready" ? `${properties.length} ${properties.length === 1 ? "property" : "properties"}${queryString ? " matching your search" : " to explore"}` : status === "loading" ? "Finding student homes…" : "Results are currently unavailable"}</p>
+              <h2
+                id="property-results-title"
+                className="m-0 text-2xl font-semibold tracking-[-0.03em] text-[#2B4162]"
+              >
+                {queryString ? "Your search results" : "Explore student homes"}
+              </h2>
+
+              <p
+                role="status"
+                aria-live="polite"
+                aria-atomic="true"
+                className="mt-2 text-[13px] text-[#6F7F8D]"
+              >
+                {status === "ready"
+                  ? `${properties.length} ${properties.length === 1 ? "property" : "properties"
+                  }${queryString ? " matching your search" : " to explore"}`
+                  : status === "loading"
+                    ? "Finding student homes…"
+                    : "Results are currently unavailable"}
+              </p>
             </div>
-            {activeFilterCount > 0 && <button type="button" onClick={clearFilters} className={`hidden min-h-11 items-center gap-1.5 rounded-full px-3 text-xs font-semibold text-[var(--ink-2)] hover:bg-[var(--chip)] md:inline-flex ${focusClass}`}><RotateCcw size={13} aria-hidden="true" />Clear {activeFilterCount} {activeFilterCount === 1 ? "filter" : "filters"}</button>}
+
+            {activeFilterCount > 0 && (
+              <button
+                type="button"
+                onClick={clearFilters}
+                className={`hidden min-h-11 items-center gap-2 rounded-full border border-[#385F71]/20 bg-white px-4 text-xs font-semibold text-[#2B4162] transition-colors hover:bg-[#E9EEF2] md:inline-flex ${focusClass}`}
+              >
+                <RotateCcw size={14} aria-hidden="true" />
+                Clear {activeFilterCount}{" "}
+                {activeFilterCount === 1 ? "filter" : "filters"}
+              </button>
+            )}
           </div>
           {status === "loading" && (
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3" aria-hidden="true">

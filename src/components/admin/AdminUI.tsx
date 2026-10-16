@@ -2,8 +2,11 @@
 import { useEffect, useId, useRef, type KeyboardEvent, type ReactNode } from "react";
 import { X } from "lucide-react";
 
-export const inputClass = "w-full px-3.5 py-2.5 rounded-xl bg-brand-light/40 border border-brand-slate/20 text-xs font-semibold text-brand-navy focus:outline-none focus:ring-2 focus:ring-brand-navy/20";
-export const buttonClass = "px-4 py-2 rounded-xl text-xs font-bold text-white bg-brand-navy hover:bg-brand-navy/90 disabled:opacity-50 disabled:cursor-not-allowed";
+export const inputClass =
+  "w-full px-3 py-2 rounded-lg bg-brand-light/40 border border-brand-slate/20 !text-sm font-medium text-brand-navy placeholder:text-brand-slate/60 transition-all duration-200 focus:outline-none focus:border-brand-navy/50 focus:ring-2 focus:ring-brand-navy/15";
+
+export const buttonClass =
+  "inline-flex items-center justify-center px-3 py-2 rounded-lg !text-[14px] font-semibold text-white bg-brand-navy hover:bg-brand-slate hover:shadow-md active:scale-[0.98] transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-brand-navy disabled:hover:shadow-none";
 export function QueryState({ loading, error, retry }: { loading?: boolean; error?: string; retry?: () => void; }) {
   if (loading) return <p role="status" className="p-5 text-sm text-brand-slate">Loading…</p>;
   if (error) return <div role="alert" className="p-4 rounded-xl border border-rose-200 bg-rose-50 text-sm text-rose-700">{error} {retry && <button type="button" onClick={retry} className="ml-2 font-bold underline">Try again</button>}</div>;

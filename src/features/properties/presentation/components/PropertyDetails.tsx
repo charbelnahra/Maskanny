@@ -36,14 +36,17 @@ export function PropertyDetailsContent({ property, media, universities, mediaErr
   const created = new Date(property.created_at);
   return <main className={styles.page}>
     <article className={styles.container}>
-      <Link href="/properties" className={styles.back}><ArrowLeft size={17} aria-hidden="true" />All properties</Link>
+      <Link href="/properties" className={styles.back}>
+        <ArrowLeft size={17} aria-hidden="true" />
+        All properties
+      </Link>
       <header className={styles.header}>
         <div className={styles.heading}>
           <div className={styles.badges}>
             <span className={`${styles.badge} ${type?.className ?? ""}`}><TypeIcon size={14} aria-hidden="true" />{type?.label ?? "Property"}</span>
             {residentLabels[property.gender] && <span className={`${styles.badge} ${styles.resident}`}><Users size={14} aria-hidden="true" />{residentLabels[property.gender]}</span>}
           </div>
-          <h1 className={styles.title}>{property.title}</h1>
+          <h2 className={styles.title}>{property.title}</h2>
           <p className={styles.address}><MapPin size={17} aria-hidden="true" /><span>{property.address || "Address not provided"}</span></p>
         </div>
         <button type="button" className={styles.favorite} aria-label={`${saved ? "Unsave" : "Save"} ${property.title}`} aria-pressed={saved} onClick={() => toggle(property.property_id)}>

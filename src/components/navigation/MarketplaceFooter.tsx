@@ -6,8 +6,9 @@ import { getBecomeHostHref } from "./marketplace-links";
 import { useMarketplaceAccount } from "./useMarketplaceAccount";
 
 const focusClass =
-  "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white";
-const linkClass = `inline-flex min-h-11 items-center rounded-sm text-sm text-[#D1DDD5] underline-offset-4 hover:text-white hover:underline ${focusClass}`;
+  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white";
+
+const linkClass = `inline-flex min-h-8 w-fit items-center rounded-lg text-sm text-[#D4DDE8] transition-colors duration-200 hover:text-white ${focusClass}`;
 
 export function MarketplaceFooter() {
   const { account } = useMarketplaceAccount();
@@ -16,36 +17,40 @@ export function MarketplaceFooter() {
   return (
     <footer
       aria-label="Maskanny footer"
-      className="student-marketplace bg-[#233E32] text-white"
+      className="student-marketplace rounded-t-3xl bg-[#1E3049] text-white"
     >
-      <div className="mx-auto w-[calc(100%-32px)] max-w-[1184px] pt-8 sm:w-[calc(100%-48px)] sm:pt-10 md:pt-12">
-        <div className="grid gap-6 pb-7 md:grid-cols-[minmax(0,1fr)_180px_180px] md:gap-12 md:pb-10">
-          <div className="min-w-0">
+      <div className="mx-auto w-[calc(100%-36px)] max-w-[1184px] sm:w-[calc(100%-56px)]">
+        <div className="grid grid-cols-2 gap-x-8 gap-y-7 py-9 sm:grid-cols-[minmax(0,1fr)_160px_180px] sm:gap-10 sm:py-10">
+          {/* Brand */}
+          <div className="col-span-2 min-w-0 sm:col-span-1">
             <Link
               href="/"
               aria-label="Maskanny home"
-              className={`inline-flex min-h-11 items-center gap-2.5 rounded-lg ${focusClass}`}
+              className={`inline-flex items-center gap-2.5 rounded-xl ${focusClass}`}
             >
               <Image
                 src="/Maskanny.svg"
                 alt=""
-                width={36}
-                height={36}
-                className="shrink-0 rounded-[10px]"
+                width={38}
+                height={38}
+                className="h-[38px] w-[38px] shrink-0 rounded-xl object-contain"
               />
-              <span className="text-xl font-semibold tracking-[-0.035em]">
+              <span className="text-xl font-semibold tracking-tight">
                 Maskanny
               </span>
             </Link>
-            <p className="mt-3 mb-0 max-w-[300px] text-sm leading-6 text-[#D1DDD5]">
+
+            <p className="mb-0 mt-3 max-w-[290px] text-sm leading-6 text-[#D4DDE8]">
               Find student housing near your university, all in one place.
             </p>
           </div>
+
+          {/* Explore */}
           <nav aria-label="Footer Explore">
-            <h2 className="m-0 mb-1 text-sm font-semibold text-white">
+            <h2 className="mb-2.5 text-sm font-semibold text-white">
               Explore
             </h2>
-            <ul className="m-0 list-none p-0">
+            <ul className="m-0 list-none space-y-1.5 p-0">
               <li>
                 <Link href="/properties" className={linkClass}>
                   Browse properties
@@ -58,11 +63,13 @@ export function MarketplaceFooter() {
               </li>
             </ul>
           </nav>
+
+          {/* Hosting */}
           <nav aria-label="Footer Hosting">
-            <h2 className="m-0 mb-1 text-sm font-semibold text-white">
+            <h2 className="mb-2.5 text-sm font-semibold text-white">
               Hosting
             </h2>
-            <ul className="m-0 list-none p-0">
+            <ul className="m-0 list-none space-y-1.5 p-0">
               <li>
                 {hostHref ? (
                   <Link href={hostHref} className={linkClass}>
@@ -78,7 +85,7 @@ export function MarketplaceFooter() {
                         ? "Open the account menu to retry loading your account"
                         : "Checking your account…"
                     }
-                    className={`${linkClass} text-left disabled:cursor-wait disabled:opacity-70`}
+                    className={`${linkClass} text-left disabled:cursor-wait disabled:opacity-60`}
                   >
                     Become a host
                   </button>
@@ -92,7 +99,8 @@ export function MarketplaceFooter() {
             </ul>
           </nav>
         </div>
-        <div className="flex flex-col gap-2 border-t border-white/15 py-5 text-xs leading-5 text-[#D1DDD5] sm:flex-row sm:items-center sm:justify-between">
+
+        <div className="flex flex-col gap-2 rounded-t-xl py-4 text-xs leading-5 text-[#BFCBDA] sm:flex-row sm:items-center sm:justify-between">
           <p className="m-0">
             © {new Date().getFullYear()} Maskanny. All rights reserved.
           </p>
