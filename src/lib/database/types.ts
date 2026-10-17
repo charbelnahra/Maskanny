@@ -39,8 +39,12 @@ export type Database = {
   };
   public: {
     Tables: {
+      property_view: {
+        Row: { property_view_id: number; property_id: string; visitor_key: string; viewed_at: string };
+        Insert: never; Update: never; Relationships: [];
+      };
       boost_payment: {
-        Row: { payment_id: string; property_boosting_id: string; submitted_by: string; reference: string; amount: number; currency: string; status: "pending" | "verified" | "rejected"; submitted_at: string; reviewed_at: string | null; reviewed_by: string | null; rejection_reason: string | null };
+        Row: { payment_id: string; property_boosting_id: string; submitted_by: string; reference: string | null; amount: number; currency: string; status: "pending" | "verified" | "rejected"; submitted_at: string; reviewed_at: string | null; reviewed_by: string | null; rejection_reason: string | null; receipt_path: string | null };
         Insert: never; Update: never; Relationships: [];
       };
       admin_activity: {
@@ -145,6 +149,7 @@ export type Database = {
       property: {
         Row: {
           address: string;
+          archived_at: string | null;
           approval_status: Database["public"]["Enums"]["property_approval_status"];
           bathroom_type: Database["public"]["Enums"]["bathroom_type"];
           bathrooms: number;
@@ -166,6 +171,7 @@ export type Database = {
         };
         Insert: {
           address: string;
+          archived_at?: string | null;
           approval_status?: Database["public"]["Enums"]["property_approval_status"];
           bathroom_type: Database["public"]["Enums"]["bathroom_type"];
           bathrooms: number;
@@ -187,6 +193,7 @@ export type Database = {
         };
         Update: {
           address?: string;
+          archived_at?: string | null;
           approval_status?: Database["public"]["Enums"]["property_approval_status"];
           bathroom_type?: Database["public"]["Enums"]["bathroom_type"];
           bathrooms?: number;
@@ -368,6 +375,16 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      archive_host_property: {
+        Args: { p_property_id: string };
+        Returns: Database["public"]["Tables"]["property"]["Row"];
+      };
+      public_live_boost_activation_times: {
+        Args: Record<string, never>;
+        Returns: { property_id: string; activated_at: string }[];
+      };
+      record_property_view: { Args: { p_property_id: string; p_visitor_key: string }; Returns: boolean };
+      host_property_view_daily: { Args: { p_from: string | null; p_to: string }; Returns: { day: string; views: number }[] };
       admin_directory_list: { Args: { p_kind: string; p_filters?: Json }; Returns: Json };
       admin_directory_detail: { Args: { p_id: string; p_kind: string }; Returns: Json };
       admin_boost_queue: { Args: { p_filters?: Json }; Returns: Json };
@@ -379,8 +396,50 @@ export type Database = {
       admin_get_profile: { Args: Record<string, never>; Returns: Json };
       admin_update_profile: { Args: { p_changes: Json }; Returns: Json };
       moderate_property: { Args: { p_property_id: string; p_decision: string; p_reason?: string }; Returns: undefined };
+      get_property_owner_notification_details: {
+        Args: {
+          p_property_id: string;
+        };
+        Returns: {
+          property_title: string;
+          owner_firstname: string;
+          owner_email: string;
+        }[];
+      };
+
+      get_host_boost_payment_notification_details: {
+        Args: {
+          p_boost_id: string;
+        };
+        Returns: {
+          property_title: string;
+          owner_firstname: string;
+          owner_email: string;
+          plan_name: string;
+          amount_due: number | null;
+          currency: string | null;
+        }[];
+      };
       decide_boost: { Args: { p_boost_id: string; p_decision: string; p_reason?: string }; Returns: Json };
       submit_boost_payment: { Args: { p_boost_id: string; p_reference: string; p_amount: number; p_currency: string }; Returns: Json };
+
+      get_boosts_needing_expiry_notifications: {
+        Args: {
+          p_today: string;
+        };
+        Returns: {
+          boost_id: string;
+          property_title: string;
+          owner_firstname: string | null;
+          owner_email: string;
+          end_date: string;
+          notification_type: string;
+        }[];
+      };
+
+      submit_host_boost_payment: { Args: { p_boost_id: string; p_reference: string | null; p_receipt_path: string | null }; Returns: Json };
+      get_host_boost_payment_status: { Args: { p_boost_id: string }; Returns: Json };
+      admin_decide_boost_payment: { Args: { p_boost_id: string; p_payment_id: string | null; p_reference: string | null; p_decision: string; p_whish_confirmed: boolean; p_reason: string | null }; Returns: Database["public"]["Tables"]["property_boosting"]["Row"] };
       review_boost_payment: { Args: { p_payment_id: string; p_decision: string; p_reason?: string }; Returns: Json };
       activate_property_boost: { Args: { p_boost_id: string }; Returns: Json };
       approve_property: {
@@ -401,6 +460,7 @@ export type Database = {
         Args: { p_property_id: string };
         Returns: Json;
       };
+      replace_host_property_universities: { Args: { p_property_id: string; p_university_ids: string[] }; Returns: string[] };
       is_property_effectively_live: {
         Args: { p_property_id: string };
         Returns: boolean;
@@ -451,116 +511,116 @@ type DefaultSchema = DatabaseWithoutInternals[Extract<
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
-    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
-    | { schema: keyof DatabaseWithoutInternals },
+  | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+  | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
-    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+  ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+    DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+  : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
   ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+    DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R;
     }
-    ? R
-    : never
+  ? R
+  : never
   : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])
-    ? (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
-        Row: infer R;
-      }
-      ? R
-      : never
-    : never;
+    DefaultSchema["Views"])
+  ? (DefaultSchema["Tables"] &
+    DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+      Row: infer R;
+    }
+  ? R
+  : never
+  : never;
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
+  | keyof DefaultSchema["Tables"]
+  | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+  ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+  : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I;
-    }
-    ? I
-    : never
+    Insert: infer I;
+  }
+  ? I
+  : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Insert: infer I;
-      }
-      ? I
-      : never
-    : never;
+  ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+    Insert: infer I;
+  }
+  ? I
+  : never
+  : never;
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
+  | keyof DefaultSchema["Tables"]
+  | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+  ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+  : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U;
-    }
-    ? U
-    : never
+    Update: infer U;
+  }
+  ? U
+  : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Update: infer U;
-      }
-      ? U
-      : never
-    : never;
+  ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+    Update: infer U;
+  }
+  ? U
+  : never
+  : never;
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema["Enums"]
-    | { schema: keyof DatabaseWithoutInternals },
+  | keyof DefaultSchema["Enums"]
+  | { schema: keyof DatabaseWithoutInternals },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+  ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+  : never = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
-    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
-    : never;
+  ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+  : never;
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof DatabaseWithoutInternals },
+  | keyof DefaultSchema["CompositeTypes"]
+  | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals;
   }
-    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
+  ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+  : never = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
-    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-    : never;
+  ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+  : never;
 
 export const Constants = {
   graphql_public: {
