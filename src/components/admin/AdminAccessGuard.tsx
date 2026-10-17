@@ -39,13 +39,81 @@ export default function AdminAccessGuard({ children }: { children: ReactNode; })
       } finally { setDenied(401); }
     });
   }
-  if (denied !== null || (activeProfile && activeProfile.role !== "admin")) return <div className="min-h-screen bg-brand-light flex items-center justify-center p-6"><div className="max-w-md bg-white rounded-2xl border border-brand-slate/15 p-6 space-y-4">
-    <h1 className="text-xl font-bold text-brand-navy">{denied === 401 ? "Authentication required" : "Admin access required"}</h1>
-    <p className="text-sm text-brand-slate">{denied === 401 ? "Sign in through Maskanny to continue." : "Your account does not have permission to view the Admin Dashboard."}</p>
-    <QueryState error={action.error} />
-    {denied === 401 && <Link className={buttonClass} href="/sign-in?next=%2Fadmin">Sign in</Link>}
-    <button type="button" className={buttonClass} onClick={() => { setDenied(null); setAuthRevision(value => value + 1); }}>Check access again</button>
-  </div></div>;
-  if (!activeProfile) return <div className="min-h-screen bg-brand-light p-8"><QueryState loading={profile.loading} error={profile.error} retry={profile.reload} /></div>;
-  return <AdminSession.Provider value={{ profile: activeProfile, refresh: profile.reload, logout, loggingOut: action.pending }}><QueryState error={action.error || profile.error} retry={profile.error ? profile.reload : undefined} />{children}</AdminSession.Provider>;
+  if (denied !== null || (activeProfile && activeProfile.role !== "admin")) {
+    return (
+      <div className="min-h-screen bg-brand-light flex items-center justify-center p-6">
+        <div className="w-full max-w-md overflow-hidden rounded-2xl border border-brand-slate/15 bg-white shadow-xl shadow-brand-navy/5">
+          <div className="flex flex-col items-center px-8 pt-8 pb-6 text-center">
+            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-navy/5">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="30"
+                height="30"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.7"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="text-brand-navy"
+                aria-hidden="true"
+              >
+                <path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z" />
+                <path d="M12 8v4" />
+                <path d="M12 16h.01" />
+              </svg>
+            </div>
+
+            <span className="mb-3 rounded-full bg-brand-light px-3 py-1 text-xs font-semibold tracking-wide text-brand-slate">
+              {denied === 401 ? "AUTHENTICATION" : "RESTRICTED AREA"}
+            </span>
+
+            <h1 className="text-2xl font-bold tracking-tight text-brand-navy">
+              {denied === 401
+                ? "Authentication required"
+                : "Admin access required"}
+            </h1>
+
+            <p className="mt-3 max-w-sm text-sm leading-6 text-brand-slate">
+              {denied === 401
+                ? "Please sign in to your Maskanny account to continue to the administration dashboard."
+                : "Your account does not have permission to access the Admin Dashboard. Please check your account and try again."}
+            </p>
+          </div>
+
+          <div className="px-8 pb-8">
+            <div className="mb-6">
+              <QueryState error={action.error} />
+            </div>
+
+            <div className="flex flex-col gap-4">
+              {denied === 401 && (
+                <Link
+                  className={`${buttonClass} flex w-full items-center justify-center rounded-xl px-5 py-3 text-sm !text-white font-semibold shadow-sm transition-all duration-200 hover:shadow-md`}
+                  href="/sign-in?next=%2Fadmin"
+                >
+                  Sign in to Maskanny
+                </Link>
+              )}
+
+              <button
+                type="button"
+                className="flex w-full items-center justify-center rounded-xl border border-brand-slate/20 bg-white px-5 py-3 text-sm font-semibold text-brand-navy transition-all duration-200 hover:border-brand-navy/40 hover:bg-brand-light focus:outline-none focus:ring-2 focus:ring-brand-navy/20 focus:ring-offset-2"
+                onClick={() => {
+                  setDenied(null);
+                  setAuthRevision((value) => value + 1);
+                }}
+              >
+                Check access again
+              </button>
+            </div>
+
+            <p className="mt-6 text-center text-xs text-brand-slate/70">
+              Maskanny · Secure Admin Portal
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 }
