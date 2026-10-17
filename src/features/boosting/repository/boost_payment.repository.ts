@@ -1,5 +1,6 @@
 import { createAuthenticatedClient } from "@/src/lib/supabase/client";
 import type { Database } from "@/src/lib/database/types";
+import { sendEmail } from "@/src/lib/email/send-email";
 
 const RECEIPT_BUCKET = "boost-payment-receipts";
 export type BoostPayment = Database["public"]["Tables"]["boost_payment"]["Row"];
@@ -100,6 +101,83 @@ export class BoostPaymentRepository {
     ) {
       throw new HostBoostPaymentError("Payment submission returned an invalid response", 502);
     }
-    return data as unknown as BoostPayment;
+
+    const payment = data as unknown as BoostPayment;
+
+    // Send the confirmation email after payment submission succeeds.
+    // Email failure must not undo the saved payment submission.
+    try {
+      const { data: ownerData, error: ownerError } =
+        await this.client.rpc(
+          "get_host_boost_payment_notification_details",
+          {
+            p_boost_id: boostId,
+          },
+        );
+
+      if (ownerError) {
+        throw new Error(ownerError.message);
+      }
+
+      const owner = ownerData?.[0];
+
+      if (!owner?.owner_email) {
+        throw new Error("Owner email was not found.");
+      }
+
+      const escapeHtml = (value: string) =>
+        value.replace(/[&<>"']/g, (character) => {
+          const entities: Record<string, string> = {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#039;",
+          };
+
+          return entities[character];
+        });
+
+      const name = escapeHtml(owner.owner_firstname || "there");
+      const property = escapeHtml(owner.property_title);
+      const plan = escapeHtml(owner.plan_name);
+
+      const amount =
+        owner.amount_due == null
+          ? ""
+          : `<p><strong>Amount:</strong> ${escapeHtml(
+            String(owner.amount_due),
+          )} ${escapeHtml(owner.currency || "")}</p>`;
+
+      await sendEmail({
+        to: owner.owner_email,
+        subject: "We received your Maskanny boost payment confirmation",
+        html: `
+          <div style="font-family: Arial, sans-serif; line-height: 1.7; color: #2B4162;">
+            <h2>Payment confirmation received</h2>
+            <p>Hello ${name},</p>
+            <p>We've received your payment confirmation for
+              <strong>${property}</strong>.</p>
+            <p><strong>Boosting plan:</strong> ${plan}</p>
+            ${amount}
+            <p><strong>Status:</strong> Pending verification</p>
+            <p>Our team will review your payment. Your boost will only be
+              activated after your payment has been verified and approved.</p>
+            <p>Thank you for choosing Maskanny!</p>
+            <p>The Maskanny Team</p>
+          </div>
+        `,
+      });
+
+      console.info("Boost payment confirmation email sent:", payment.payment_id);
+    } catch (emailError) {
+      console.error(
+        "Failed to send boost payment confirmation email:",
+        emailError,
+      );
+    }
+
+    return payment;
+
   }
 }
