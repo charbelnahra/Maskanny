@@ -94,7 +94,9 @@ function FullMarketplaceNavView({
   const menuButton = useRef<HTMLButtonElement>(null);
   const hostHref = getBecomeHostHref(account);
   const links = [
+    { label: "Home", href: "/" },
     { label: "Explore", href: "/properties" },
+    { label: "About", href:"/about"},
     { label: "Become a host", href: hostHref },
   ];
 

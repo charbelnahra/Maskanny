@@ -29,7 +29,7 @@ export function MarketplaceHero({ universities }: { universities: UniversitiesRe
       <div className={styles.heading}>
         <h1 id="homepage-hero-title">Welcome to Maskanny — Your Next Home Starts here.</h1>
         <p>
-          Finding the right place shouldn't be complicated. Explore available properties, discover spaces that fit your needs, and take the next step toward feeling at home.
+          Find your ideal student home near campus, with spaces that fit your needs and budget.
         </p>
       </div>
 
@@ -91,10 +91,7 @@ export function MarketplaceHero({ universities }: { universities: UniversitiesRe
                   : "Discover your campus"}
               </p>
             )}
-            <div className={styles.widgetAction}>
-              Closer to campus
-              <ArrowUpRight size={16} />
-            </div>
+
           </div>
         </div>
       </div>
