@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { Check, Clock3, ShieldCheck } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Property submitted | Maskanny",
+  title: "Maskanny | Property submitted",
 };
 
 export default function PropertyConfirmationPage() {

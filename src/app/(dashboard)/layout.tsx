@@ -1,5 +1,10 @@
 import { redirect } from "next/navigation";
 import { createCookieClient } from "@/src/lib/supabase/cookie-client";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Maskanny | Owner Dashboard",
+};
 
 export const dynamic = "force-dynamic";
 

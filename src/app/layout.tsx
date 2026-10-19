@@ -5,8 +5,12 @@ import "./globals.css";
 import "./app.css";
 
 export const metadata: Metadata = {
-  title: "Maskanny",
-  description: "Student housing search and management platform",
+  title: {
+    default: "Maskanny | Student Housing in Lebanon",
+    template: "%s | Maskanny",
+  },
+  description:
+    "Find student apartments, rooms, and dorms near universities in Lebanon.",
   icons: {
     icon: "/Maskanny.svg",
   },

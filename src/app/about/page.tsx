@@ -1,5 +1,6 @@
 
 import Link from "next/link";
+
 import {
   ArrowRight,
   Building2,
@@ -11,6 +12,12 @@ import {
   ShieldCheck,
   Users,
 } from "lucide-react";
+
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Maskanny | About Us",
+};
 
 const features = [
   {

@@ -3,7 +3,10 @@ import { redirect } from "next/navigation";
 import { createCookieClient } from "@/src/lib/supabase/cookie-client";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = { title: "Create a property | Maskanny" };
+export const metadata: Metadata = {
+  title: "Maskanny | Create a Property Listing"
+};
+
 
 export const dynamic = "force-dynamic";
 

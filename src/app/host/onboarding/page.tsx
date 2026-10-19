@@ -1,6 +1,11 @@
 import { redirect } from "next/navigation";
 import { createCookieClient } from "@/src/lib/supabase/cookie-client";
 import { HostOnboardingWelcome } from "./host-onboarding-welcome";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Maskanny | Host Onboarding",
+};
 
 export const dynamic = "force-dynamic";
 
