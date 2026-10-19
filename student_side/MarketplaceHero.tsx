@@ -27,9 +27,9 @@ export function MarketplaceHero({ universities }: { universities: UniversitiesRe
         />
       </div>
       <div className={styles.heading}>
-        <h1 id="homepage-hero-title">Welcome to Maskanny — Your Next Home Starts here.</h1>
+        <h1 id="homepage-hero-title">Welcome to Maskanny — Your Next Home Starts here</h1>
         <p>
-          Find your ideal student home near campus, with spaces that fit your needs and budget.
+          Find your ideal student home near campus, with spaces that fit your needs and budget
         </p>
       </div>
 

@@ -1,6 +1,11 @@
 import { redirect } from "next/navigation";
 import { createCookieClient } from "@/src/lib/supabase/cookie-client";
 import { ProfilePage } from "@/src/features/users/presentation/ProfilePage";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Maskanny | My Profile",
+};
 
 export const dynamic = "force-dynamic";
 

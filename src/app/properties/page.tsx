@@ -1,4 +1,9 @@
 import { ListingsBrowser } from "@/src/features/properties/presentation/components/ListingsBrowser";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Maskanny | Browse Student Housing",
+};
 
 export default async function PropertiesPage({
   searchParams,

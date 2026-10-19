@@ -1,6 +1,11 @@
 import { redirect } from "next/navigation";
 import { createCookieClient } from "@/src/lib/supabase/cookie-client";
 import { VerifyEmailForm } from "./verify-email-form";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Maskanny | Verify Your Email",
+};
 
 export const dynamic = "force-dynamic";
 

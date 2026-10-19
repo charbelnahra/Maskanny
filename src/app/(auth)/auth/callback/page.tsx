@@ -14,6 +14,11 @@ import {
 } from "@/src/lib/supabase/pending-verification";
 import { exchangedCodePurpose, hasRecoveryHint } from "@/src/lib/supabase/recovery-flow";
 import { AuthActionLink, AuthHeading, AuthNotice } from "../../auth-ui";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Maskanny | Completing Sign In",
+};
 
 const LINK_ERROR =
   "Maskanny couldn't confirm your verification status from this link. It may be invalid, expired, or already used. If your email was confirmed, continue to Sign In.";
